@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import logoUrl from '../../assets/logo.png'
+import logoUrl from '../../assets/icon.svg'
 import { NAV_SECTIONS, type SectionChrome, type SectionTone } from '../../config/sections'
 import { useSectionTheme } from '../../lib/useSectionTheme'
 import { buttonClass } from '../ui/buttonClass'
@@ -115,7 +115,7 @@ export function Navbar() {
         className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-6 sm:px-8 lg:h-18"
       >
         <a href="#inicio" className="flex items-center gap-2.5" onClick={() => setMenuOpen(false)}>
-          <img src={logoUrl} alt="" width={40} height={42} className="h-9 w-auto" />
+          <img src={logoUrl} alt="Início" width={40} height={42} className="h-9 w-auto" />
           <span className={`font-display text-lg font-bold tracking-tight ${skin.brand}`}>
             {t('common.brand')}
           </span>
