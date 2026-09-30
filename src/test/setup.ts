@@ -47,6 +47,43 @@ class IntersectionObserverStub {
 
 globalThis.IntersectionObserver = IntersectionObserverStub as unknown as typeof IntersectionObserver
 
+/**
+ * jsdom tambem nao implementa `matchMedia` nem `ResizeObserver`.
+ *
+ * Os dois entram na camada de empilhamento: `matchMedia` responde a preferencia
+ * por menos movimento (`useReducedMotion`, do Framer Motion) e a medicao de
+ * alturas, `ResizeObserver` acompanha a altura de cada folha.
+ *
+ * Os stubs respondem o caso base: nenhuma media casa e nenhum redimensionamento
+ * e reportado. Assim o comportamento nos testes e o mesmo de hoje — pagina sem
+ * reducao de movimento e folhas medidas apenas na montagem.
+ */
+if (!window.matchMedia) {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    }) as MediaQueryList
+}
+
+class ResizeObserverStub {
+  observe(): void {}
+
+  unobserve(): void {}
+
+  disconnect(): void {}
+}
+
+if (!('ResizeObserver' in globalThis)) {
+  globalThis.ResizeObserver = ResizeObserverStub as unknown as typeof ResizeObserver
+}
+
 // Idioma deterministico em todos os testes e isolamento de storage.
 beforeEach(async () => {
   await i18n.changeLanguage('pt-BR')

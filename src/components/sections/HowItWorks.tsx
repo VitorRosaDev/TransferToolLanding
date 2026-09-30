@@ -35,7 +35,6 @@ export function HowItWorks() {
       eyebrow={t('howItWorks.eyebrow')}
       title={t('howItWorks.title')}
       subtitle={t('howItWorks.subtitle')}
-      tone="muted"
     >
       <div className="relative">
         <span
@@ -77,8 +76,9 @@ function StepRow({ id, index }: StepRowProps) {
       ref={itemRef}
       className="relative grid gap-3 pl-12 sm:pl-16 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:gap-12"
     >
-      {/* A bolinha esconde a linha atras dela: o marcador usa o mesmo fundo da
-          secao (`bg-surface-muted`), entao a secao precisa continuar "muted". */}
+      {/* A bolinha esconde a linha atras dela: o marcador usa a mesma superficie
+          de fundo da folha (`bg-surface-muted`), entao a linha nao aparece por
+          tras do numero em nenhum dos tons. */}
       <span
         aria-hidden="true"
         className={`absolute top-0 left-0 flex h-8 w-8 items-center justify-center rounded-full border font-mono text-[0.6875rem] font-semibold tabular-nums transition-colors duration-300 sm:h-10 sm:w-10 ${

@@ -1,5 +1,8 @@
 import type { ElementType, HTMLAttributes, ReactNode } from 'react'
 
+import type { SectionTone } from '../../config/sections'
+import { useSheetTone } from '../../lib/sheetTone'
+
 /** Superficie unica da pagina: mesmo raio, borda e sombra em todos os cards. */
 const SURFACE_CLASS = 'rounded-2xl border border-ink-200/70 bg-surface shadow-card'
 
@@ -69,11 +72,24 @@ interface IconTileProps {
   className?: string
 }
 
-/** Quadrado de icone: um so tom de accent para toda a pagina. */
+/**
+ * Quadrado de icone: um so tom de accent para toda a pagina.
+ *
+ * O accent e o unico par que nao vem da inversao de neutros: na folha escura a
+ * tinta clara vira um preenchimento translucido e o icone, um tom claro de
+ * accent (o `brand-600` perde contraste sobre fundo escuro).
+ */
+const ICON_TILE_TONE: Record<SectionTone, string> = {
+  light: 'border-brand-100 bg-brand-50 text-brand-600',
+  dark: 'border-brand-400/25 bg-brand-500/15 text-brand-300',
+}
+
 export function IconTile({ children, className = '' }: IconTileProps) {
+  const tone = useSheetTone()
+
   return (
     <span
-      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-brand-100 bg-brand-50 text-brand-600 ${className}`.trim()}
+      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${ICON_TILE_TONE[tone]} ${className}`.trim()}
     >
       {children}
     </span>

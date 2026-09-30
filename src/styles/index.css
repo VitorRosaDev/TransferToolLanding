@@ -3,8 +3,22 @@
 /* ==========================================================================
    TransferTool — sistema de design
    --------------------------------------------------------------------------
-   Uma base neutra clara, um unico accent (o azul do logo) e uma escala
-   "void" reservada ao hero escuro, que se dissolve na base clara no scroll.
+   Uma base neutra clara, um unico accent (o azul do logo) e a escala "void",
+   que agora veste as folhas escuras da pagina.
+
+   A pagina e uma mesa: cada secao e uma folha empilhada (`Stack`) com um tom
+   declarado em `src/config/sections.ts`. Todo par claro/escuro da pagina sai
+   de dois movimentos:
+
+   1. Neutros invertem por token. Uma folha marcada com
+      `data-section-tone="dark"` redefine os tokens `ink-*` e `surface*` logo
+      abaixo; como as utilidades do Tailwind compilam para `var(--color-ink-*)`,
+      a mesma classe `text-ink-900` e "tinta principal" nas duas situacoes.
+      Ninguem precisa escrever variante neutra por tom.
+   2. Accent e explicito. Um tom de `brand-*` pode ser preenchimento (botao,
+      que nao muda) ou texto/icone (onde o tom legivel muda com o fundo), entao
+      a escolha fica no componente, com o tom vindo de `useSheetTone()`.
+
    Sem paletas paralelas por plataforma e sem gradientes decorativos.
    ========================================================================== */
 
@@ -82,14 +96,16 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5.5rem;
+    /* Sem `scroll-padding-top`: o destino de um link de menu precisa encostar
+       no topo da janela, que e onde a folha prende ao empilhar. O respiro
+       abaixo do cabecalho fixo vem do padding vertical de cada folha. */
     -webkit-text-size-adjust: 100%;
   }
 
   body {
     margin: 0;
     /* `clip` (e nao `hidden`) nao cria container de scroll: preserva o
-       `position: sticky` usado na secao "Como funciona". */
+       `position: sticky` das folhas empilhadas. */
     overflow-x: clip;
     background-color: var(--color-surface);
     color: var(--color-ink-900);
@@ -97,6 +113,31 @@
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+    Folha escura: os neutros invertem por token, nao por classe.
+
+    A leitura e a mesma da folha clara — `text-ink-900` e a tinta principal,
+    `text-ink-600` o texto de apoio, `bg-surface` a superficie elevada (card),
+    `bg-ink-200/70` a linha de 1px. O que muda e o valor de cada token: o
+    componente continua escrito uma vez so.
+  */
+  [data-section-tone='dark'] {
+    --color-surface: var(--color-void-800);
+    --color-surface-muted: var(--color-void-900);
+
+    --color-ink-50: rgb(255 255 255 / 0.04);
+    --color-ink-100: rgb(255 255 255 / 0.07);
+    --color-ink-200: rgb(255 255 255 / 0.12);
+    --color-ink-300: rgb(255 255 255 / 0.26);
+    --color-ink-400: rgb(255 255 255 / 0.42);
+    --color-ink-500: rgb(255 255 255 / 0.62);
+    --color-ink-600: rgb(255 255 255 / 0.78);
+    --color-ink-700: rgb(255 255 255 / 0.86);
+    --color-ink-800: rgb(255 255 255 / 0.92);
+    --color-ink-900: #ffffff;
+    --color-ink-950: #ffffff;
   }
 
   h1,

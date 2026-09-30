@@ -27,7 +27,7 @@ const BADGE_ICONS = {
 /**
  * Secao 04 — onde os dados ficam.
  *
- * As garantias sao lidas como uma ficha tecnica: celulas brancas coladas por
+ * As garantias sao lidas como uma ficha tecnica: celulas solidas coladas por
  * linhas de 1px (`gap-px` sobre o fundo `ink-200`) em vez de seis cards
  * soltos, o que reforca a ideia de conjunto unico e verificavel.
  */
@@ -41,7 +41,6 @@ export function Privacy() {
       eyebrow={t('privacy.eyebrow')}
       title={t('privacy.title')}
       subtitle={t('privacy.subtitle')}
-      tone="muted"
     >
       <Reveal>
         <ul className="grid gap-px overflow-hidden rounded-2xl border border-ink-200/70 bg-ink-200/70 sm:grid-cols-2 lg:grid-cols-3">
