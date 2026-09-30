@@ -1,16 +1,22 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 
+import { sectionChrome, sectionIndex, sectionTone } from '../../config/sections'
 import { trackEvent } from '../../lib/analytics'
 import { heroSectionRef } from '../../lib/heroAnchor'
 import { useTypewriter } from '../../lib/useTypewriter'
 import { buttonClass } from '../ui/buttonClass'
 import { ShapeGrid } from '../ui/ShapeGrid'
+import { Stack } from '../ui/Stack'
 import { TransferCoreCanvas } from './TransferCoreCanvas'
 
 /**
- * Hero: a promessa em uma frase e o nucleo visual da transferencia. O conteudo
- * recua suavemente no scroll para dar passagem a secao seguinte.
+ * Hero: a promessa em uma frase e o nucleo visual da transferencia.
+ *
+ * A folha e presa pelo `Stack` (o hero fica parado e a proxima folha sobe por
+ * cima). O recuo do texto acompanha esse movimento: o progresso vem do scroll da
+ * janela sobre o trecho em que a folha seguinte cobre a tela — se viesse do
+ * retangulo do hero, ele ficaria em zero enquanto o hero estivesse preso.
  */
 export function Hero() {
   const { t } = useTranslation()
@@ -19,43 +25,69 @@ export function Hero() {
   const titleLine2 = t('hero.titleLine2')
   const { typed, isTyping } = useTypewriter(titleLine2)
 
-  const { scrollYProgress } = useScroll({
-    target: heroSectionRef,
-    offset: ['start start', 'end start'],
+  // O recuo acompanha a folha seguinte: 0 quando ela aparece na base da janela,
+  // 1 quando termina de cobrir o hero. Vem do retangulo real (e nao de uma
+  // medida guardada), entao continua exato com qualquer altura de janela, fonte
+  // ou conteudo — sem estado para sair de sincronia.
+  const { scrollY } = useScroll()
+
+  const copyProgress = useTransform(scrollY, () => {
+    const nextSheet = heroSectionRef.current?.nextElementSibling
+    if (!nextSheet) return 0
+
+    const viewport = window.innerHeight
+    const covered = viewport - nextSheet.getBoundingClientRect().top
+
+    return Math.min(1, Math.max(0, covered / viewport))
   })
 
-  const copyY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : -60])
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.72], [1, shouldReduceMotion ? 1 : 0])
+  const copyY = useTransform(copyProgress, [0, 1], [0, shouldReduceMotion ? 0 : -60])
+  const copyOpacity = useTransform(copyProgress, [0, 0.72], [1, shouldReduceMotion ? 1 : 0])
 
   return (
-    <section
+    <Stack
       id="inicio"
+      tone={sectionTone('inicio')}
+      chrome={sectionChrome('inicio')}
+      index={sectionIndex('inicio')}
       ref={heroSectionRef}
-      className="relative isolate overflow-hidden bg-void-950 pt-28 pb-20 sm:pt-32 lg:pt-40 lg:pb-28"
+      className="overflow-hidden bg-void-950 pt-28 pb-20 text-white sm:pt-32 lg:pt-40 lg:pb-28"
+      background={
+        /*
+          Palco do hero: malha animada no lugar da textura estatica. O passo de
+          100px mantem a cadencia da malha antiga; a borda usa o mesmo branco de
+          5,5% e o hover acende a celula no azul da marca. A camada nao captura
+          ponteiro (o ShapeGrid rastreia o cursor pela janela) e desbota nas
+          bordas pela mascara radial.
+        */
+        <div className="h-full w-full mask-fade-edges">
+          <ShapeGrid
+            direction="diagonal"
+            speed={0.2}
+            squareSize={100}
+            shape="square"
+            borderColor="rgba(255, 255, 255, 0.055)"
+            hoverFillColor="rgba(59, 118, 246, 0.22)"
+            hoverTrailAmount={4}
+          />
+        </div>
+      }
     >
-      {/*
-        Palco do hero: malha animada no lugar da textura estatica. O passo de
-        56px mantem a cadencia da malha antiga; a borda usa o mesmo branco de
-        5,5% e o hover acende a celula no azul da marca. A camada nao captura
-        ponteiro (o ShapeGrid rastreia o cursor pela janela) e desbota nas bordas
-        pela mascara radial.
-      */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 mask-fade-edges">
-        <ShapeGrid
-          direction="diagonal"
-          speed={0.2}
-          squareSize={100}
-          shape="square"
-          borderColor="rgba(255, 255, 255, 0.055)"
-          hoverFillColor="rgba(59, 118, 246, 0.22)"
-          hoverTrailAmount={4}
-        />
-      </div>
-
-      <div className="relative mx-auto w-full max-w-6xl px-6 sm:px-8">
+      <div className="relative mx-auto my-auto w-full max-w-6xl px-6 sm:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-14">
-          <motion.div style={{ y: copyY, opacity: copyOpacity }}>
-            <p className="mono-label text-white/55">{t('hero.badge')}</p>
+          {/*
+            No mobile a coluna unica abre pelo cubo e o titulo vem logo depois,
+            seguido do resto do texto. A partir de lg o `order` sai de cena (o
+            bloco volta a ser `block`) e vale a ordem do documento: texto a
+            esquerda, cubo a direita.
+          */}
+          <motion.div
+            style={{ y: copyY, opacity: copyOpacity }}
+            className="order-2 flex flex-col lg:order-1 lg:block"
+          >
+            <p className="mono-label order-2 mt-4 text-white/55 lg:order-none lg:mt-0">
+              {t('hero.badge')}
+            </p>
 
             {/*
               Duas camadas no mesmo slot do grid: a invisivel reserva a altura do
@@ -67,7 +99,7 @@ export function Hero() {
             */}
             <h1
               aria-label={`${titleLine1} ${titleLine2}`}
-              className="mt-6 grid max-w-[18ch] text-4xl leading-[1.06] font-bold text-balance text-white sm:text-5xl lg:text-[3.4rem]"
+              className="order-1 mt-0 grid max-w-[18ch] text-4xl leading-[1.06] font-bold text-balance text-white sm:text-5xl lg:order-none lg:mt-6 lg:text-[3.4rem]"
             >
               <span aria-hidden="true" className="invisible col-start-1 row-start-1">
                 {titleLine1}
@@ -85,11 +117,11 @@ export function Hero() {
               </span>
             </h1>
 
-            <p className="mt-7 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg">
+            <p className="order-3 mt-7 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg">
               {t('hero.subtitle')}
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="order-4 mt-9 flex flex-wrap items-center gap-3">
               <a
                 href="#downloads"
                 className={buttonClass('primary', 'lg')}
@@ -108,7 +140,7 @@ export function Hero() {
               </a>
             </div>
 
-            <p className="mono-label mt-8 flex items-center gap-2.5 text-white/55">
+            <p className="order-5 mono-label mt-8 flex items-center gap-2.5 text-white/55">
               <span
                 aria-hidden="true"
                 className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400 animate-pulse-soft"
@@ -117,7 +149,7 @@ export function Hero() {
             </p>
           </motion.div>
 
-          <div className="relative mx-auto w-full max-w-md">
+          <div className="relative order-1 mx-auto w-full max-w-md lg:order-2">
             <div className="relative h-[300px] w-full sm:h-[360px] lg:h-[400px]">
               <TransferCoreCanvas className="absolute inset-0 h-full w-full" />
             </div>
@@ -139,7 +171,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-    </section>
+    </Stack>
   )
 }
