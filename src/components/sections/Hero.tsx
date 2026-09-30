@@ -162,10 +162,6 @@ export function Hero() {
               <span aria-hidden="true" className="text-white/20">
                 &rarr;
               </span>
-              <span className="text-brand-300">{t('hero.flow.payloadLabel')}</span>
-              <span aria-hidden="true" className="text-white/20">
-                &rarr;
-              </span>
               <span>{t('hero.flow.desktopLabel')}</span>
             </motion.p>
           </div>

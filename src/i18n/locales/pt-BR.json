@@ -35,7 +35,6 @@
     "offlineNote": "Funciona sem internet · Os dados ficam no dispositivo",
     "flow": {
       "mobileLabel": "TransferTool Mobile",
-      "payloadLabel": "carga.json",
       "desktopLabel": "TransferTool RPA"
     }
   },
@@ -43,10 +42,10 @@
     "eyebrow": "O problema",
     "title": "O gargalo não é o estoque. É a digitação.",
     "paragraph1": "No almoxarifado central, a conferência física acontece no galpão e o registro acontece no sistema. Entre esses dois mundos, o operador vira um transcritor manual: relê listas conferidas no papel e redigita centenas de linhas no ERP.",
-    "paragraph2": "Essa latência entre o que foi entregue e o que foi registrado custa tempo, desgasta a rotina e abre espaço para erros de quantidade, lote e destino — justamente nos dados que sustentam a prestação de contas da logística escolar.",
+    "paragraph2": "Essa latência entre o que foi entregue e o que foi registrado custa tempo, desgasta a rotina e abre espaço para erros na digitação de quantidade, lote e destino — justamente nos dados que sustentam a prestação de contas da logística escolar.",
     "solutionEyebrow": "A resposta",
     "solutionTitle": "Dois aplicativos, um contrato só.",
-    "solutionText": "O TransferTool corta a digitação pela raiz: o aplicativo móvel entrega a carga pronta em um arquivo JSON e o robô no desktop percorre a mesma rotina que o operador faria — só que de forma determinística, com lote e validade conferidos item a item.",
+    "solutionText": "O TransferTool corta a digitação pela raiz. O aplicativo móvel entrega a carga pronta em um arquivo de transferência em formato JSON. O robô no desktop percorre a mesma rotina que o operador faria — só que de forma determinística, com lote e validade conferidos item a item.",
     "products": {
       "mobile": {
         "tag": "Android · Offline-first",

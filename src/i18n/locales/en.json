@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "TransferTool — From offline collection to ERP automation",
-    "description": "TransferTool removes manual typing from your ERP: offline-first collection on mobile plus desktop RPA for warehouse transfers. Download both applications."
+    "title": "TransferTool — From collection at the warehouse to automation in the ERP",
+    "description": "TransferTool eliminates manual typing in the ERP: offline-first collection in a mobile app and desktop RPA automation for warehouse transfers. Download both applications."
   },
   "common": {
     "brand": "TransferTool",
@@ -35,7 +35,6 @@
     "offlineNote": "Works without internet · Data stays on the device",
     "flow": {
       "mobileLabel": "TransferTool Mobile",
-      "payloadLabel": "load.json",
       "desktopLabel": "TransferTool RPA"
     }
   },
@@ -43,10 +42,10 @@
     "eyebrow": "The problem",
     "title": "The bottleneck is not the stock. It is the typing.",
     "paragraph1": "In the central warehouse, physical counting happens on the floor and the record happens in the system. Between those two worlds, the operator becomes a manual transcriber: re-reading paper lists and retyping hundreds of lines into the ERP.",
-    "paragraph2": "That latency between what was delivered and what was recorded costs time, wears down the routine and opens room for mistakes in quantity, batch and destination — exactly the data that supports public accountability for school logistics.",
+    "paragraph2": "That latency between what was delivered and what was recorded costs time, wears down the routine and opens room for typing mistakes in quantity, batch and destination — exactly the data that supports public accountability for school logistics.",
     "solutionEyebrow": "The answer",
     "solutionTitle": "Two applications, one contract.",
-    "solutionText": "TransferTool cuts typing at the root: the mobile app hands over a finished load as a JSON file and the desktop robot walks the very same routine an operator would — only deterministically, with batch and expiry checked item by item.",
+    "solutionText": "TransferTool cuts typing at the root. The mobile app hands over the finished load in a transfer file in JSON format. The desktop robot walks the very same routine an operator would — only deterministically, with batch and expiry checked item by item.",
     "products": {
       "mobile": {
         "tag": "Android · Offline-first",
