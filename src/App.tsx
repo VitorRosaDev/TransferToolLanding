@@ -1,17 +1,32 @@
-import { useEffect } from 'react'
+import { useEffect, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CookieBanner } from './components/layout/CookieBanner'
 import { Footer } from './components/layout/Footer'
 import { Navbar } from './components/layout/Navbar'
-import { Contact } from './components/sections/Contact'
 import { Downloads } from './components/sections/Downloads'
 import { Faq } from './components/sections/Faq'
 import { Hero } from './components/sections/Hero'
 import { HowItWorks } from './components/sections/HowItWorks'
 import { Overview } from './components/sections/Overview'
 import { Privacy } from './components/sections/Privacy'
+import { SECTIONS, type SectionId } from './config/sections'
 import { initAnalytics } from './lib/analytics'
+
+/**
+ * Folha de cada secao, com a ordem vinda de `src/config/sections.ts`.
+ *
+ * O mapa e exaustivo por tipo: declarar uma folha nova na configuracao obriga a
+ * ligar o componente aqui, e ordem, tom e navegacao passam a ter uma fonte so.
+ */
+const SHEETS: Record<SectionId, () => ReactElement> = {
+  inicio: Hero,
+  overview: Overview,
+  howItWorks: HowItWorks,
+  downloads: Downloads,
+  privacy: Privacy,
+  faq: Faq,
+}
 
 export default function App() {
   const { t } = useTranslation()
@@ -33,15 +48,11 @@ export default function App() {
       <Navbar />
 
       <main id="main" className="flex-1">
-        <Hero />
+        {SECTIONS.map(({ id }) => {
+          const Sheet = SHEETS[id]
 
-        <Overview />
-
-        <HowItWorks />
-        <Downloads />
-        <Privacy />
-        <Faq />
-        <Contact />
+          return <Sheet key={id} />
+        })}
       </main>
 
       <Footer />

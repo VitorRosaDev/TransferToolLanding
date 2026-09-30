@@ -23,7 +23,6 @@
     "downloads": "Downloads",
     "privacy": "Privacidade",
     "faq": "FAQ",
-    "contact": "Contato",
     "cta": "Baixar agora"
   },
   "hero": {
@@ -219,30 +218,16 @@
       }
     }
   },
-  "contact": {
-    "eyebrow": "Contato",
-    "title": "Desenvolvido de forma independente por Vitor Rosa.",
-    "text": "O TransferTool nasceu de uma necessidade real do almoxarifado central e segue evoluindo com quem usa a ferramenta no dia a dia. Sugestões, relatos de erro e pedidos de adaptação para outros municípios são bem-vindos.",
-    "linksLabel": "Canais de contato",
-    "linkedin": "LinkedIn",
-    "linkedinValue": "in/vitorrosadev",
-    "email": "E-mail",
-    "emailValue": "vitor.rosa.dev@outlook.com",
-    "website": "Portfólio",
-    "websiteValue": "vitorrosadev.github.io",
-    "github": "GitHub",
-    "githubValue": "github.com/VitorRosaDev"
-  },
   "footer": {
-    "tagline": "Coleta offline-first e automação RPA para transferências de almoxarifado.",
-    "productTitle": "Produto",
-    "projectTitle": "Projeto",
-    "contactTitle": "Contato",
-    "releases": "Releases",
+    "rights": "© {{year}} Vitor Rosa - All rights reserved.",
+    "linksLabel": "Canais de contato",
     "consentPreferences": "Preferências de cookies",
-    "backToTop": "Voltar ao topo",
-    "rights": "© {{year}} TransferTool · Desenvolvido por Vitor Rosa",
-    "builtWith": "Feito com React, Vite e Tailwind CSS · Fontes self-hosted"
+    "links": {
+      "linkedin": "LinkedIn de Vitor Rosa",
+      "github": "GitHub de Vitor Rosa",
+      "email": "Enviar e-mail para Vitor Rosa",
+      "website": "Portfólio de Vitor Rosa"
+    }
   },
   "cookies": {
     "ariaLabel": "Aviso de cookies e medição de audiência",

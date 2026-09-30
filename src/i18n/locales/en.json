@@ -23,7 +23,6 @@
     "downloads": "Downloads",
     "privacy": "Privacy",
     "faq": "FAQ",
-    "contact": "Contact",
     "cta": "Download now"
   },
   "hero": {
@@ -219,30 +218,16 @@
       }
     }
   },
-  "contact": {
-    "eyebrow": "Contact",
-    "title": "Independently built by Vitor Rosa.",
-    "text": "TransferTool started from a real need in the central warehouse and keeps evolving together with the people who use it every day. Suggestions, bug reports and requests to adapt it to other municipalities are welcome.",
-    "linksLabel": "Contact channels",
-    "linkedin": "LinkedIn",
-    "linkedinValue": "in/vitorrosadev",
-    "email": "E-mail",
-    "emailValue": "vitor.rosa.dev@outlook.com",
-    "website": "Portfolio",
-    "websiteValue": "vitorrosadev.github.io",
-    "github": "GitHub",
-    "githubValue": "github.com/VitorRosaDev"
-  },
   "footer": {
-    "tagline": "Offline-first collection and RPA automation for warehouse transfers.",
-    "productTitle": "Product",
-    "projectTitle": "Project",
-    "contactTitle": "Contact",
-    "releases": "Releases",
+    "rights": "© {{year}} Vitor Rosa - All rights reserved.",
+    "linksLabel": "Contact channels",
     "consentPreferences": "Cookie preferences",
-    "backToTop": "Back to top",
-    "rights": "© {{year}} TransferTool · Built by Vitor Rosa",
-    "builtWith": "Built with React, Vite and Tailwind CSS · Self-hosted fonts"
+    "links": {
+      "linkedin": "Vitor Rosa on LinkedIn",
+      "github": "Vitor Rosa on GitHub",
+      "email": "Email Vitor Rosa",
+      "website": "Vitor Rosa's portfolio"
+    }
   },
   "cookies": {
     "ariaLabel": "Cookie and audience measurement notice",
