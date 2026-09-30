@@ -18,7 +18,7 @@ const EDGE = 2.5
 const HALF = EDGE / 2
 
 /** Raio das barras: a grossura da "chapa" do cubo vazado. */
-const THICKNESS = 0.17
+const THICKNESS = 0.16
 
 /** Azul institucional do logo — o unico acento cromatico da secao. */
 const CUBE_COLOR = '#3b76f6'
@@ -30,19 +30,19 @@ const CUBE_COLOR = '#3b76f6'
  * restaria o reflexo das luzes diretas — o cubo sumiria no fundo escuro do hero.
  */
 const METALNESS = 0
-const ROUGHNESS = 0.3
+const ROUGHNESS = 0.1
 
 /** Luz propria: impede que as arestas apaguem de todo contra o fundo escuro. */
 const EMISSIVE_INTENSITY = 0.1
 
 /** Repouso em tres quartos: de frente o cubo pareceria uma chapa chapada. */
-const REST_TILT: Vec3 = [0.5, -0.55, 0]
+const REST_TILT: Vec3 = [0.45, -0.55, 0]
 
 /** O quanto o ponteiro inclina o cubo (0 = ignora o mouse, 1 = acompanha tudo). */
-const POINTER_TILT = 0.1
+const POINTER_TILT = 0.13
 
 /** Fator do `lerp` por quadro: quanto menor, mais lento e mais suave o giro. */
-const SMOOTHING = 0.03
+const SMOOTHING = 0.05
 
 /**
  * As 12 arestas de um cubo de aresta `EDGE`. Cada uma vira um cilindro do

@@ -31,8 +31,8 @@ vi.mock('framer-motion', async (importOriginal) => {
 })
 
 /** Pose de repouso e ganho do ponteiro, espelhando o componente. */
-const REST = { x: 0.5, y: -0.55 }
-const POINTER_TILT = 0.1
+const REST = { x: 0.45, y: -0.55 }
+const POINTER_TILT = 0.13
 
 /** Caixa logica do hero: entra no lugar do layout que o jsdom nao calcula. */
 const HERO_BOX = { width: 1200, height: 800 }
@@ -134,7 +134,8 @@ describe('TransferCoreCanvas', () => {
     // nx = -0.9 e +0.9: o cubo tem que assumir as duas pontas.
     expect(left).toBeCloseTo(REST.y - 0.9 * POINTER_TILT, 3)
     expect(right).toBeCloseTo(REST.y + 0.9 * POINTER_TILT, 3)
-    expect(Math.abs(right - left)).toBeCloseTo(0.18, 3)
+    // Distancia entre as duas pontas: 1.8 (de -0.9 a +0.9) vezes o ganho.
+    expect(Math.abs(right - left)).toBeCloseTo(1.8 * POINTER_TILT, 3)
   })
 
   it('usa a altura da secao no eixo Y, de cima para baixo', () => {
