@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "title": "TransferTool — From offline collection to ERP automation",
+    "description": "TransferTool removes manual typing from your ERP: offline-first collection on mobile plus desktop RPA for warehouse transfers. Download both applications."
+  },
+  "common": {
+    "brand": "TransferTool",
+    "skipToContent": "Skip to main content",
+    "download": "Download",
+    "comingSoon": "In preparation",
+    "version": "Version",
+    "size": "Size",
+    "language": "Language",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "switchTo": "Switch language to {{language}}",
+    "opensInNewTab": "opens in a new tab"
+  },
+  "nav": {
+    "ariaLabel": "Main navigation",
+    "overview": "Overview",
+    "howItWorks": "How it works",
+    "downloads": "Downloads",
+    "privacy": "Privacy",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "cta": "Download now"
+  },
+  "hero": {
+    "badge": "Process automation · Offline-first",
+    "titleLine1": "From the collection at the warehouse",
+    "titleLine2": "to the transfer recorded in the system.",
+    "subtitle": "TransferTool combines a mobile app that works offline during cargo verification with a robot that automatically enters the record into the management system.",
+    "ctaPrimary": "Download the applications",
+    "ctaSecondary": "See how it works",
+    "offlineNote": "Works without internet · Data stays on the device",
+    "flow": {
+      "mobileLabel": "TransferTool Mobile",
+      "payloadLabel": "load.json",
+      "desktopLabel": "TransferTool RPA"
+    }
+  },
+  "overview": {
+    "eyebrow": "The problem",
+    "title": "The bottleneck is not the stock. It is the typing.",
+    "paragraph1": "In the central warehouse, physical counting happens on the floor and the record happens in the system. Between those two worlds, the operator becomes a manual transcriber: re-reading paper lists and retyping hundreds of lines into the ERP.",
+    "paragraph2": "That latency between what was delivered and what was recorded costs time, wears down the routine and opens room for mistakes in quantity, batch and destination — exactly the data that supports public accountability for school logistics.",
+    "solutionEyebrow": "The answer",
+    "solutionTitle": "Two applications, one contract.",
+    "solutionText": "TransferTool cuts typing at the root: the mobile app hands over a finished load as a JSON file and the desktop robot walks the very same routine an operator would — only deterministically, with batch and expiry checked item by item.",
+    "products": {
+      "mobile": {
+        "tag": "Android · Offline-first",
+        "title": "TransferTool Mobile",
+        "text": "A smart collector for the central warehouse. It builds loads of school provisions and consumable materials on a local SQLite database, with catalog, history and business rules that block edits at the wrong time.",
+        "bullets": {
+          "one": "Catalog and load history entirely on the device",
+          "two": "Lifecycle Draft → Consolidated → Exported",
+          "three": "Validated JSON payload export"
+        }
+      },
+      "desktop": {
+        "tag": "Windows · RPA automation",
+        "title": "TransferTool RPA",
+        "text": "A C#/.NET 8 WPF robot that talks to the ERP through the browser's own debugging interface (CDP). It imports payloads by drag and drop and runs the transfer routine screen by screen.",
+        "bullets": {
+          "one": "Load queue grouped by source warehouse",
+          "two": "Batch aggregation by expiry and quantity",
+          "three": "Real-time log with a result per item"
+        }
+      }
+    },
+    "benefits": {
+      "resilient": {
+        "title": "No connectivity, no stalls",
+        "text": "SQLite with referential integrity and WAL mode: the yard may have no signal and collection keeps going."
+      },
+      "typed": {
+        "title": "Strongly typed contracts",
+        "text": "The load JSON is deserialized, validated and sanitized before any interaction with the ERP."
+      },
+      "batches": {
+        "title": "Batches in the right order",
+        "text": "The robot queries each code, aggregates available batches and picks the nearest expiry, completing quantities across batches when needed."
+      },
+      "auditable": {
+        "title": "Traceable by design",
+        "text": "Every status transition is written to an audit log with previous state, new state, user and reason."
+      }
+    }
+  },
+  "howItWorks": {
+    "eyebrow": "How it works",
+    "title": "Five steps, from the yard to the ERP.",
+    "subtitle": "The load is born on the phone, signed right there in the yard and ends up posted in the system without a single typed item.",
+    "steps": {
+      "montar": {
+        "label": "Step 1",
+        "title": "Build the load",
+        "text": "The collector creates a new load in the app, picks source and destination, and adds the items counted in the yard. Everything is written locally, with no network dependency."
+      },
+      "fechar": {
+        "label": "Step 2",
+        "title": "Close and sign",
+        "text": "Once counting is complete the load is consolidated with a physical signature. State rules block item changes after that point."
+      },
+      "exportar": {
+        "label": "Step 3",
+        "title": "Export the payload",
+        "text": "The load becomes a JSON file with source, destination and items. That file travels from the phone to the warehouse workstation by whatever means is available."
+      },
+      "importar": {
+        "label": "Step 4",
+        "title": "Import into the robot",
+        "text": "On the desktop the operator drops the file into TransferTool RPA. Loads join a queue grouped by source warehouse, with immediate content validation."
+      },
+      "automatizar": {
+        "label": "Step 5",
+        "title": "Automate in the ERP",
+        "text": "With the session already open, the robot takes over: it opens the transfer entry screen, fills in the warehouses, picks the batch by expiry and quantity, adds each item and confirms the document."
+      }
+    },
+    "humanNote": "Logging into the ERP remains a human task. The robot takes over from the transfer entry screen and never stores credentials."
+  },
+  "downloads": {
+    "eyebrow": "Downloads",
+    "title": "Bring TransferTool to your warehouse.",
+    "subtitle": "Both applications are free and distributed through the project's release repository on GitHub. The mobile app is the starting point; the robot is the next step.",
+    "versionLabel": "Version {{version}}",
+    "platform": "Platform",
+    "fileLabel": "File",
+    "downloadCta": "Download installer",
+    "downloadApk": "Download APK",
+    "noneCta": "Currently unavailable",
+    "comingSoonHint": "The button unlocks as soon as the artifact is published to the release repository.",
+    "allReleases": "See all releases on GitHub",
+    "scanQr": "Point an Android camera at the code to open the download right on the phone.",
+    "integrity": "Binaries are published as signed GitHub releases — the same versioned channel used by the source code.",
+    "desktop": {
+      "name": "TransferTool RPA",
+      "platformValue": "Windows 10/11 (x64)",
+      "requirementsTitle": "Before installing",
+      "requirement1": "Windows 10 or 11 64-bit, with the same browser you already use to reach the ERP.",
+      "requirement2": "Permission to run the installer; Windows may show the standard warning for files downloaded from the internet.",
+      "requirement3": "Your session opened in the ERP portal. The robot never stores a login or password."
+    },
+    "mobile": {
+      "name": "TransferTool Mobile",
+      "platformValue": "Android 8.0 or later",
+      "requirementsTitle": "Before installing",
+      "requirement1": "Allow installation from trusted sources in your Android settings.",
+      "requirement2": "The APK is signed and distributed from the project's official repository.",
+      "requirement3": "Enough free space for the local load database to grow along with the history."
+    }
+  },
+  "privacy": {
+    "eyebrow": "Privacy",
+    "title": "Municipal data does not travel around.",
+    "subtitle": "TransferTool is local by architecture, not by configuration. There is no intermediary server, no cloud account and no third-party sync.",
+    "badges": {
+      "local": {
+        "title": "Local processing",
+        "text": "Collection runs on the device itself and automation runs on the workstation itself."
+      },
+      "database": {
+        "title": "SQLite on the device",
+        "text": "Loads, catalog and history live in a local relational database with referential integrity enabled."
+      },
+      "noCloud": {
+        "title": "No cloud",
+        "text": "No step in the flow requires internet, a service account or an intermediary server."
+      },
+      "noThirdParty": {
+        "title": "No third parties",
+        "text": "No operational data is sent to external APIs at any point in the process."
+      },
+      "session": {
+        "title": "ERP session preserved",
+        "text": "The robot uses the session the operator already opened in the browser; credentials are never stored."
+      },
+      "audit": {
+        "title": "Audit trail",
+        "text": "Load state transitions are recorded locally for later review."
+      }
+    },
+    "pageNote": "This page is a showcase. It only uses Google Analytics when you allow it, and you can change that choice at any time from the footer."
+  },
+  "faq": {
+    "eyebrow": "Frequently asked questions",
+    "title": "What to know before downloading.",
+    "items": {
+      "offline": {
+        "question": "Does the mobile app need internet to work?",
+        "answer": "No. Collection was built offline-first: catalog, loads and history live in SQLite on the device itself. The internet only helps move the JSON file to the warehouse workstation — and even that can be done over a cable, a USB drive or local sharing."
+      },
+      "erp": {
+        "question": "Does TransferTool replace the ERP?",
+        "answer": "No. The ERP remains the official source of truth. TransferTool simply performs the same entry routine an operator would, with less typing and fewer mistakes, leaving the load lifecycle inside the destination system."
+      },
+      "compatibility": {
+        "question": "Does it work with ERPs other than Atende.Net?",
+        "answer": "The current version automates the Atende.Net portal (IPM Sistemas), the scenario its selectors and flow were mapped against. Because the automation layer is isolated in a dedicated flow class, adapting to another system means replacing that layer without touching the rest of the application."
+      },
+      "security": {
+        "question": "Is automating inside the ERP safe?",
+        "answer": "The robot uses the browser's own debugging interface, in the session the operator opened manually. It never stores a login, password or token, and it prefers to stop rather than force an operation: items without an available batch are reported in red and stock shortages show up in amber."
+      },
+      "requirements": {
+        "question": "What are the requirements for each application?",
+        "answer": "Desktop: Windows 10 or 11 64-bit with the browser used by the ERP installed. Mobile: Android 8.0 or later and permission to install apps from trusted sources. There is no server dependency, central database or extra license."
+      },
+      "data": {
+        "question": "Does any municipal data leave the local network?",
+        "answer": "None. There is no intermediary server and no sync with third-party services at any step of the flow. The official history stays in the ERP and the collection history stays on the device."
+      },
+      "updates": {
+        "question": "How do I get updates?",
+        "answer": "Every version is published as a signed release in the project repository. Just come back to this page and download the new installer or APK whenever a version is announced."
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Independently built by Vitor Rosa.",
+    "text": "TransferTool started from a real need in the central warehouse and keeps evolving together with the people who use it every day. Suggestions, bug reports and requests to adapt it to other municipalities are welcome.",
+    "linksLabel": "Contact channels",
+    "linkedin": "LinkedIn",
+    "linkedinValue": "in/vitorrosadev",
+    "email": "E-mail",
+    "emailValue": "vitor.rosa.dev@outlook.com",
+    "website": "Portfolio",
+    "websiteValue": "vitorrosadev.github.io",
+    "github": "GitHub",
+    "githubValue": "github.com/VitorRosaDev"
+  },
+  "footer": {
+    "tagline": "Offline-first collection and RPA automation for warehouse transfers.",
+    "productTitle": "Product",
+    "projectTitle": "Project",
+    "contactTitle": "Contact",
+    "releases": "Releases",
+    "consentPreferences": "Cookie preferences",
+    "backToTop": "Back to top",
+    "rights": "© {{year}} TransferTool · Built by Vitor Rosa",
+    "builtWith": "Built with React, Vite and Tailwind CSS · Self-hosted fonts"
+  },
+  "cookies": {
+    "ariaLabel": "Cookie and audience measurement notice",
+    "title": "Cookies and audience measurement",
+    "text": "This page may use Google Analytics 4 to understand where visits come from and which downloads matter most, with anonymized IP addresses and Consent Mode v2. Nothing loads before your choice — and the TransferTool software stays 100% local.",
+    "accept": "Accept",
+    "reject": "Decline",
+    "details": "Details in the privacy section"
+  }
+}

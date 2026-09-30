@@ -1,0 +1,48 @@
+# --- Dependencias ---
+node_modules
+.pnp
+.pnp.js
+
+# --- Build ---
+dist
+dist-ssr
+build
+*.local
+
+# --- Binarios das aplicacoes (NUNCA versionar) ---
+# Os instaladores vivem no repositorio publico de releases do GitHub.
+# Ver PROJECT_REPORT.md > "Distribuicao de downloads".
+Release_Installers/
+public/downloads/
+
+# --- Ambiente ---
+.env
+.env.*
+!.env.example
+
+# --- Logs ---
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Cobertura ---
+coverage
+
+# --- Editores / SO ---
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# --- Vite / Vitest ---
+.vite

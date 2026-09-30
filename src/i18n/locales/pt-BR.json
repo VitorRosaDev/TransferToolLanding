@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "title": "TransferTool — Da coleta no depósito à automação no ERP",
+    "description": "TransferTool elimina a digitação manual no ERP: coleta offline-first em aplicativo móvel e automação RPA no desktop para transferências de almoxarifado. Baixe as duas aplicações."
+  },
+  "common": {
+    "brand": "TransferTool",
+    "skipToContent": "Ir para o conteúdo principal",
+    "download": "Baixar",
+    "comingSoon": "Em preparação",
+    "version": "Versão",
+    "size": "Tamanho",
+    "language": "Idioma",
+    "openMenu": "Abrir menu de navegação",
+    "closeMenu": "Fechar menu de navegação",
+    "switchTo": "Mudar idioma para {{language}}",
+    "opensInNewTab": "abre em uma nova aba"
+  },
+  "nav": {
+    "ariaLabel": "Navegação principal",
+    "overview": "Visão geral",
+    "howItWorks": "Como funciona",
+    "downloads": "Downloads",
+    "privacy": "Privacidade",
+    "faq": "FAQ",
+    "contact": "Contato",
+    "cta": "Baixar agora"
+  },
+  "hero": {
+    "badge": "Automação de processos · Offline-first",
+    "titleLine1": "Da coleta no depósito",
+    "titleLine2": "à transferência lançada no sistema.",
+    "subtitle": "O TransferTool une um aplicativo móvel que funciona sem internet na hora da conferência da carga e um robô que lança o registro de forma automática no sistema de gestão.",
+    "ctaPrimary": "Baixar as aplicações",
+    "ctaSecondary": "Ver como funciona",
+    "offlineNote": "Funciona sem internet · Os dados ficam no dispositivo",
+    "flow": {
+      "mobileLabel": "TransferTool Mobile",
+      "payloadLabel": "carga.json",
+      "desktopLabel": "TransferTool RPA"
+    }
+  },
+  "overview": {
+    "eyebrow": "O problema",
+    "title": "O gargalo não é o estoque. É a digitação.",
+    "paragraph1": "No almoxarifado central, a conferência física acontece no galpão e o registro acontece no sistema. Entre esses dois mundos, o operador vira um transcritor manual: relê listas conferidas no papel e redigita centenas de linhas no ERP.",
+    "paragraph2": "Essa latência entre o que foi entregue e o que foi registrado custa tempo, desgasta a rotina e abre espaço para erros de quantidade, lote e destino — justamente nos dados que sustentam a prestação de contas da logística escolar.",
+    "solutionEyebrow": "A resposta",
+    "solutionTitle": "Dois aplicativos, um contrato só.",
+    "solutionText": "O TransferTool corta a digitação pela raiz: o aplicativo móvel entrega a carga pronta em um arquivo JSON e o robô no desktop percorre a mesma rotina que o operador faria — só que de forma determinística, com lote e validade conferidos item a item.",
+    "products": {
+      "mobile": {
+        "tag": "Android · Offline-first",
+        "title": "TransferTool Mobile",
+        "text": "Coletor inteligente para o almoxarifado central. Monta cargas de rancho escolar e materiais de consumo com banco SQLite local, catálogo, histórico e regras de negócio que impedem edição fora de hora.",
+        "bullets": {
+          "one": "Catálogo e histórico de cargas 100% no dispositivo",
+          "two": "Ciclo de vida Rascunho → Consolidada → Exportada",
+          "three": "Exportação do payload JSON validado"
+        }
+      },
+      "desktop": {
+        "tag": "Windows · Automação RPA",
+        "title": "TransferTool RPA",
+        "text": "Robô em C#/.NET 8 com WPF que conversa com o ERP pela interface de depuração do próprio navegador (CDP). Importa os payloads por arrastar e soltar e executa a rotina de transferência tela por tela.",
+        "bullets": {
+          "one": "Fila de cargas agrupada por depósito de origem",
+          "two": "Agregação de lotes por validade e quantidade",
+          "three": "Log em tempo real com resultado por item"
+        }
+      }
+    },
+    "benefits": {
+      "resilient": {
+        "title": "Zero conectividade, zero travamento",
+        "text": "SQLite com integridade referencial e modo WAL: o galpão pode estar sem sinal que a coleta continua."
+      },
+      "typed": {
+        "title": "Contratos fortemente tipados",
+        "text": "O JSON de carga é desserializado, validado e sanitizado antes de qualquer interação com o ERP."
+      },
+      "batches": {
+        "title": "Lotes na ordem correta",
+        "text": "O robô consulta cada código, agrega os lotes disponíveis e prioriza a validade mais próxima, completando quantidade entre lotes quando necessário."
+      },
+      "auditable": {
+        "title": "Rastreável por design",
+        "text": "Cada transição de status da carga fica registrada em log de auditoria, com estado anterior, novo estado, usuário e motivo."
+      }
+    }
+  },
+  "howItWorks": {
+    "eyebrow": "Como funciona",
+    "title": "Cinco passos, do galpão ao ERP.",
+    "subtitle": "A carga nasce no celular, é assinada ainda no pátio e termina lançada no sistema sem uma única digitação de item.",
+    "steps": {
+      "montar": {
+        "label": "Passo 1",
+        "title": "Montar a carga",
+        "text": "O coletor abre uma nova carga no aplicativo, escolhe origem e destino e adiciona os itens conferidos no galpão. Tudo é gravado localmente, sem depender de rede."
+      },
+      "fechar": {
+        "label": "Passo 2",
+        "title": "Fechar e assinar",
+        "text": "Com a conferência concluída, a carga é consolidada com assinatura física. As regras de estado bloqueiam alterações de itens depois desse ponto."
+      },
+      "exportar": {
+        "label": "Passo 3",
+        "title": "Exportar o payload",
+        "text": "A carga vira um arquivo JSON com origem, destino e itens. O arquivo é compartilhado do celular para a estação do almoxarifado por qualquer meio disponível."
+      },
+      "importar": {
+        "label": "Passo 4",
+        "title": "Importar no robô",
+        "text": "No desktop, o operador arrasta o arquivo para o TransferTool RPA. As cargas entram numa fila agrupada por depósito de origem, com validação imediata do conteúdo."
+      },
+      "automatizar": {
+        "label": "Passo 5",
+        "title": "Automatizar no ERP",
+        "text": "Com a sessão já aberta, o robô assume a rotina: abre a inclusão de transferência, preenche depósitos, seleciona o lote por validade e quantidade, inclui cada item e confirma o documento."
+      }
+    },
+    "humanNote": "O login no ERP continua sendo feito por uma pessoa. O robô assume a partir da tela de inclusão de transferência e nunca guarda credenciais."
+  },
+  "downloads": {
+    "eyebrow": "Downloads",
+    "title": "Leve o TransferTool para o seu almoxarifado.",
+    "subtitle": "As duas aplicações são gratuitas e distribuídas pelo repositório de releases do projeto no GitHub. O aplicativo móvel é o ponto de partida; o robô é o passo seguinte.",
+    "versionLabel": "Versão {{version}}",
+    "platform": "Plataforma",
+    "fileLabel": "Arquivo",
+    "downloadCta": "Baixar instalador",
+    "downloadApk": "Baixar APK",
+    "noneCta": "Indisponível no momento",
+    "comingSoonHint": "O botão é liberado assim que o artefato for publicado no repositório de releases.",
+    "allReleases": "Ver todas as releases no GitHub",
+    "scanQr": "Aponte a câmera do Android para abrir o download direto no aparelho.",
+    "integrity": "Os binários são publicados como releases assinadas no GitHub — o mesmo canal versionado usado pelo código-fonte.",
+    "desktop": {
+      "name": "TransferTool RPA",
+      "platformValue": "Windows 10/11 (x64)",
+      "requirementsTitle": "Antes de instalar",
+      "requirement1": "Windows 10 ou 11 de 64 bits, com o mesmo navegador que você já usa para acessar o ERP.",
+      "requirement2": "Permissão para executar o instalador; o Windows pode exibir o aviso padrão de aplicativo baixado da internet.",
+      "requirement3": "Sua sessão aberta no portal do ERP. O robô nunca armazena login nem senha."
+    },
+    "mobile": {
+      "name": "TransferTool Mobile",
+      "platformValue": "Android 8.0 ou superior",
+      "requirementsTitle": "Antes de instalar",
+      "requirement1": "Habilite a instalação de aplicativos de fontes confiáveis nas configurações do Android.",
+      "requirement2": "O APK é assinado e distribuído pelo repositório oficial do projeto.",
+      "requirement3": "Espaço livre suficiente para o banco de cargas local crescer junto com o histórico."
+    }
+  },
+  "privacy": {
+    "eyebrow": "Privacidade",
+    "title": "Os dados do município não circulam por aí.",
+    "subtitle": "O TransferTool é local por decisão de arquitetura, não por configuração. Não existe servidor intermediário, conta em nuvem ou sincronização com terceiros.",
+    "badges": {
+      "local": {
+        "title": "Processamento local",
+        "text": "A coleta roda no próprio aparelho e a automação roda na própria estação de trabalho."
+      },
+      "database": {
+        "title": "SQLite no dispositivo",
+        "text": "Cargas, catálogo e histórico ficam em banco relacional local, com integridade referencial ativa."
+      },
+      "noCloud": {
+        "title": "Sem nuvem",
+        "text": "Nenhuma etapa do fluxo exige internet, conta de serviço ou servidor intermediário."
+      },
+      "noThirdParty": {
+        "title": "Sem terceiros",
+        "text": "Nenhum dado operacional é enviado para APIs externas em nenhum ponto do processo."
+      },
+      "session": {
+        "title": "Sessão do ERP preservada",
+        "text": "O robô usa a sessão que o operador já abriu no navegador; credenciais nunca são armazenadas."
+      },
+      "audit": {
+        "title": "Trilha de auditoria",
+        "text": "As transições de estado das cargas ficam registradas localmente para conferência posterior."
+      }
+    },
+    "pageNote": "Esta página é uma vitrine. Ela só usa o Google Analytics quando você autoriza, e a autorização pode ser alterada a qualquer momento no rodapé."
+  },
+  "faq": {
+    "eyebrow": "Perguntas frequentes",
+    "title": "Dúvidas antes de baixar.",
+    "items": {
+      "offline": {
+        "question": "O aplicativo móvel precisa de internet para funcionar?",
+        "answer": "Não. A coleta foi construída offline-first: catálogo, cargas e histórico ficam em SQLite no próprio aparelho. A internet só ajuda a levar o arquivo JSON até a estação do almoxarifado — e mesmo isso pode ser feito por cabo, pendrive ou compartilhamento local."
+      },
+      "erp": {
+        "question": "O TransferTool substitui o ERP?",
+        "answer": "Não. O ERP continua sendo a fonte oficial dos dados. O TransferTool apenas executa a mesma rotina de lançamento que um operador faria, com menos digitação e menos erro, e deixa o ciclo de vida da carga no sistema de destino."
+      },
+      "compatibility": {
+        "question": "Funciona com outros ERPs além do Atende.Net?",
+        "answer": "A versão atual automatiza o portal Atende.Net (IPM Sistemas), cenário para o qual os seletores e o fluxo foram mapeados. Como a camada de automação fica isolada em uma classe de fluxo dedicada, adaptar para outro sistema é substituir essa camada, sem tocar no restante da aplicação."
+      },
+      "security": {
+        "question": "Automatizar dentro do ERP é seguro?",
+        "answer": "O robô usa a interface de depuração do próprio navegador, na sessão que o operador abriu manualmente. Ele nunca guarda login, senha ou token, e prefere parar a forçar a operação: itens sem lote disponível são registrados em vermelho e faltas de estoque aparecem em âmbar."
+      },
+      "requirements": {
+        "question": "Quais são os requisitos de cada aplicação?",
+        "answer": "No desktop: Windows 10 ou 11 de 64 bits, com o navegador usado pelo ERP instalado. No celular: Android 8.0 ou superior e permissão para instalar aplicativos de fontes confiáveis. Não há dependência de servidor, banco de dados central ou licença adicional."
+      },
+      "data": {
+        "question": "Algum dado do município sai da rede local?",
+        "answer": "Nenhum. Não existe servidor intermediário nem sincronização com serviços de terceiros em nenhuma etapa do fluxo. O histórico oficial permanece no ERP e o histórico da coleta permanece no aparelho."
+      },
+      "updates": {
+        "question": "Como recebo atualizações?",
+        "answer": "Cada versão é publicada como release assinada no repositório do projeto. Basta voltar a esta página e baixar o novo instalador ou APK quando uma versão for anunciada."
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contato",
+    "title": "Desenvolvido de forma independente por Vitor Rosa.",
+    "text": "O TransferTool nasceu de uma necessidade real do almoxarifado central e segue evoluindo com quem usa a ferramenta no dia a dia. Sugestões, relatos de erro e pedidos de adaptação para outros municípios são bem-vindos.",
+    "linksLabel": "Canais de contato",
+    "linkedin": "LinkedIn",
+    "linkedinValue": "in/vitorrosadev",
+    "email": "E-mail",
+    "emailValue": "vitor.rosa.dev@outlook.com",
+    "website": "Portfólio",
+    "websiteValue": "vitorrosadev.github.io",
+    "github": "GitHub",
+    "githubValue": "github.com/VitorRosaDev"
+  },
+  "footer": {
+    "tagline": "Coleta offline-first e automação RPA para transferências de almoxarifado.",
+    "productTitle": "Produto",
+    "projectTitle": "Projeto",
+    "contactTitle": "Contato",
+    "releases": "Releases",
+    "consentPreferences": "Preferências de cookies",
+    "backToTop": "Voltar ao topo",
+    "rights": "© {{year}} TransferTool · Desenvolvido por Vitor Rosa",
+    "builtWith": "Feito com React, Vite e Tailwind CSS · Fontes self-hosted"
+  },
+  "cookies": {
+    "ariaLabel": "Aviso de cookies e medição de audiência",
+    "title": "Cookies e medição de audiência",
+    "text": "Esta página pode usar o Google Analytics 4 para entender de onde vêm as visitas e quais downloads interessam mais, com endereço IP anonimizado e Consent Mode v2. Nada é carregado antes da sua escolha — e o software TransferTool continua 100% local.",
+    "accept": "Aceitar",
+    "reject": "Recusar",
+    "details": "Detalhes na seção de privacidade"
+  }
+}
