@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Landing page oficial do TransferTool — da coleta offline a automacao no ERP.",
+  "description": "Landing page oficial do TransferTool — da coleta no depósito à automação no ERP.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
