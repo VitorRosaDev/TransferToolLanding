@@ -1,0 +1,75 @@
+name: Deploy no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Permite disparar manualmente pela aba Actions.
+  workflow_dispatch:
+
+# Permissoes minimas exigidas pelo deploy de Pages via OIDC.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Um unico deploy concorrente; nao cancela um deploy ja em andamento.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Node 22 (>= 22.22) e o minimo exigido pelo toolchain:
+          # Vite 8 / TypeScript 6 / jsdom / vitest pedem >= 22.12.
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Checagem de tipos
+        run: npm run typecheck
+
+      - name: Testes
+        run: npm test
+
+      - name: Build (com downloads habilitados)
+        run: npm run build
+        env:
+          # v1.2.0 ja esta publicada no repositorio publico de releases.
+          # Nao e segredo: apenas libera os botoes de download.
+          VITE_RELEASES_READY: 'true'
+          # Opcional: sem o secret, a camada de analytics permanece inerte.
+          VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empacotar artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
