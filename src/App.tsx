@@ -10,6 +10,7 @@ import { Hero } from './components/sections/Hero'
 import { HowItWorks } from './components/sections/HowItWorks'
 import { Overview } from './components/sections/Overview'
 import { Privacy } from './components/sections/Privacy'
+import { Research } from './components/sections/Research'
 import { SECTIONS, type SectionId } from './config/sections'
 import { initAnalytics } from './lib/analytics'
 
@@ -26,6 +27,7 @@ const SHEETS: Record<SectionId, () => ReactElement> = {
   downloads: Downloads,
   privacy: Privacy,
   faq: Faq,
+  research: Research,
 }
 
 export default function App() {

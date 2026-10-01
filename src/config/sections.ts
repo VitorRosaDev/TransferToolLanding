@@ -18,6 +18,7 @@ export const SECTIONS = [
   { id: 'downloads', tone: 'light', chrome: 'glass', navLabelKey: 'nav.downloads' },
   { id: 'privacy', tone: 'dark', chrome: 'glass', navLabelKey: 'nav.privacy' },
   { id: 'faq', tone: 'light', chrome: 'glass', navLabelKey: 'nav.faq' },
+  { id: 'research', tone: 'dark', chrome: 'glass' },
 ] as const
 
 type SectionEntry = (typeof SECTIONS)[number]
