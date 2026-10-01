@@ -41,7 +41,7 @@ export function OverviewProducts() {
                   </IconTile>
                 </div>
 
-                <p className="mt-5 text-sm leading-relaxed text-ink-600">
+                <p className="mt-5 text-justify text-sm leading-relaxed text-ink-600">
                   {t(`overview.products.${id}.text`)}
                 </p>
 
@@ -66,7 +66,7 @@ export function OverviewProducts() {
             <h3 className="mt-4 text-base font-semibold text-ink-900">
               {t(`overview.benefits.${id}.title`)}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink-600">
+            <p className="mt-2 text-justify text-sm leading-relaxed text-ink-600">
               {t(`overview.benefits.${id}.text`)}
             </p>
           </li>

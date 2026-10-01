@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -34,6 +34,24 @@ describe('Footer', () => {
       'href',
       siteConfig.website,
     )
+  })
+
+  it('oferece idioma com icone e empilha assinatura, canais e preferencias', () => {
+    render(<Footer />)
+
+    const footer = screen.getByRole('contentinfo')
+    const copyright = screen.getByText(/Vitor Rosa - All rights reserved\./)
+    const links = within(footer).getByRole('list', { name: /canais de contato/i })
+    const language = within(footer).getByRole('group', { name: 'Idioma' })
+    const preferences = screen.getByRole('button', { name: /preferências de cookies/i })
+
+    expect(language.querySelector('svg')).not.toBeNull()
+    expect(copyright.compareDocumentPosition(links) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(links.compareDocumentPosition(language) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(
+      language.compareDocumentPosition(preferences) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(footer.querySelector(':scope > div')?.className).toContain('flex-col')
   })
 
   it('reabre as preferencias de cookies', async () => {

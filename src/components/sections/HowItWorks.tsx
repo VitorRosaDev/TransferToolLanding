@@ -54,7 +54,7 @@ export function HowItWorks() {
         </ol>
       </div>
 
-      <p className="mt-12 border-t border-ink-200/80 pt-6 text-sm leading-relaxed text-ink-500 sm:mt-14">
+      <p className="mt-12 border-t border-ink-200/80 pt-6 text-justify text-sm leading-relaxed text-ink-500 sm:mt-14">
         {t('howItWorks.humanNote')}
       </p>
     </Section>
@@ -91,13 +91,15 @@ function StepRow({ id, index }: StepRowProps) {
       </span>
 
       <div className="lg:pt-1.5">
-        <p className="mono-label text-ink-500">{t(`howItWorks.steps.${id}.label`)}</p>
-        <h3 className="mt-2 text-lg font-bold text-ink-900 sm:text-xl">
+        <p className="mono-label text-center text-ink-500 lg:text-left">
+          {t(`howItWorks.steps.${id}.label`)}
+        </p>
+        <h3 className="mt-2 text-center text-lg font-bold text-ink-900 sm:text-xl lg:text-left">
           {t(`howItWorks.steps.${id}.title`)}
         </h3>
       </div>
 
-      <p className="text-sm leading-relaxed text-ink-600 sm:text-base lg:pt-7">
+      <p className="text-justify text-sm leading-relaxed text-ink-600 sm:text-base lg:pt-7">
         {t(`howItWorks.steps.${id}.text`)}
       </p>
     </li>

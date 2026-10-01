@@ -53,10 +53,10 @@ export function Privacy() {
                   <Icon className="h-5 w-5" />
                 </IconTile>
 
-                <h3 className="mt-5 text-base font-semibold text-ink-900">
+                <h3 className="mt-5 text-center text-base font-semibold text-ink-900">
                   {t(`privacy.badges.${id}.title`)}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-600">
+                <p className="mt-2 text-justify text-sm leading-relaxed text-ink-600">
                   {t(`privacy.badges.${id}.text`)}
                 </p>
               </li>

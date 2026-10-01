@@ -99,7 +99,7 @@ src/
 │   ├── useSectionTheme.ts           # tom da folha que atravessa o cabeçalho
 │   └── sheetTone.ts                 # contexto de tom + superfícies das folhas
 ├── styles/index.css                 # tokens @theme, tons das folhas, base
-└── test/                            # setup + 13 arquivos de teste (72 casos)
+└── test/                            # setup + 13 arquivos de teste (78 casos)
 public/img/LOGO.png                  # favicon / imagem de compartilhamento
 index.html                           # meta tags, OG, JSON-LD, <html lang>
 ```
@@ -171,4 +171,4 @@ attachment`, então o download acontece **na mesma aba**, sem sair do site nem a
 npm test
 ```
 
-72 casos cobrindo: `analytics` (consentimento, injeção do script, filtragem de eventos), `LanguageToggle` (troca, persistência, `<html lang>`), `CookieBanner` (estados, recusa, reabertura), `DownloadCard` (estado "em preparação", link liberado, QR Code), `Faq` (acordeão acessível), `Navbar`, `Footer`, `sections` (ordem, alternância de tons, paridade i18n) e `Research` (origem científica, artigo "em elaboração").
+78 casos cobrindo: `analytics` (consentimento, injeção do script, filtragem de eventos), `LanguageToggle` (troca, persistência, `<html lang>`), `CookieBanner` (estados, recusa, reabertura), `DownloadCard` (estado "em preparação", link liberado, QR Code), `TransferCoreCanvas` (ponteiro, giroscópio, permissão e limpeza de listeners), `Faq` (acordeão acessível), `Navbar`, `Footer`, `sections` (ordem, alternância de tons, paridade i18n) e `Research` (origem científica, artigo "em elaboração").

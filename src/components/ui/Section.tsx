@@ -69,7 +69,7 @@ export function Section({
       aria-labelledby={title ? headingId : undefined}
     >
       <div className="relative mx-auto my-auto w-full max-w-6xl px-6 py-20 sm:px-8 lg:py-28">
-        <Reveal className="border-t border-ink-200/80 pt-7">
+        <Reveal className="mx-auto border-t border-ink-200/80 pt-7 text-center lg:mx-0 lg:text-left">
           <p className="mono-label text-ink-500">
             <span className={NUMBER_TONE[tone]}>{number}</span>
             <span className="mx-2 text-ink-300">/</span>
@@ -79,14 +79,14 @@ export function Section({
           {title ? (
             <h2
               id={headingId}
-              className="mt-4 max-w-3xl text-3xl font-bold text-balance text-ink-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.08]"
+              className="mx-auto mt-4 max-w-3xl text-3xl font-bold text-balance text-ink-900 sm:text-4xl lg:mx-0 lg:text-[2.75rem] lg:leading-[1.08]"
             >
               {title}
             </h2>
           ) : null}
 
           {subtitle ? (
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-600 sm:text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-justify text-ink-600 sm:text-lg lg:mx-0 lg:text-left">
               {subtitle}
             </p>
           ) : null}

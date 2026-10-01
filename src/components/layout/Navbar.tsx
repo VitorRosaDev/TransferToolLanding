@@ -135,8 +135,6 @@ export function Navbar() {
         </ul>
 
         <div className="ml-auto flex items-center gap-2.5">
-          <LanguageToggle />
-
           <a
             href="#downloads"
             className={buttonClass('primary', 'md', 'max-lg:w-11 max-lg:px-0')}
@@ -144,7 +142,7 @@ export function Navbar() {
             title={t('nav.cta')}
           >
             <span className="sr-only lg:not-sr-only">{t('nav.cta')}</span>
-            <IconDownload className="h-4 w-4" />
+            <IconDownload className="h-5 w-5" strokeWidth={2.5} />
           </a>
 
           <button
@@ -191,6 +189,9 @@ export function Navbar() {
                 >
                   {t('nav.cta')}
                 </a>
+              </li>
+              <li className="flex justify-center border-t border-ink-200/70 pt-3">
+                <LanguageToggle />
               </li>
             </ul>
           </motion.div>

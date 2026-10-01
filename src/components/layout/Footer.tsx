@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { siteConfig } from '../../config/site'
 import { reopenConsentPreferences } from '../../lib/analytics'
 import { IconGithub, IconGlobe, IconLinkedin, IconMail } from '../ui/icons'
+import { LanguageToggle } from './LanguageToggle'
 
 /**
  * Canais do autor — os mesmos links do antigo card de contato, agora em icones
@@ -31,10 +32,10 @@ export function Footer() {
 
   return (
     <footer className="relative z-20 border-t border-ink-200/70 bg-surface">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-6 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-6 py-8 text-center sm:flex-row sm:justify-between sm:px-8 sm:text-left">
         <p className="text-xs text-ink-500">{t('footer.rights', { year })}</p>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+        <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
           <ul aria-label={t('footer.linksLabel')} className="flex list-none items-center gap-1 p-0">
             {SOCIAL_LINKS.map(({ id, href, Icon, external }) => (
               <li key={id}>
@@ -51,6 +52,11 @@ export function Footer() {
               </li>
             ))}
           </ul>
+
+          <LanguageToggle
+            showIcon
+            className="inline-flex! border-transparent bg-transparent p-0 backdrop-blur-none lg:hidden!"
+          />
 
           <button
             type="button"

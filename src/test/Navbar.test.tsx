@@ -62,8 +62,24 @@ describe('Navbar', () => {
 
     const downloadLink = screen.getByRole('link', { name: 'Baixar agora' })
     expect(downloadLink).toHaveAttribute('href', '#downloads')
-    expect(downloadLink.querySelector('svg')).not.toBeNull()
+    expect(downloadLink.querySelector('svg')).toHaveAttribute('stroke-width', '2.5')
     expect(downloadLink.querySelector('.sr-only')).toHaveTextContent('Baixar agora')
+  })
+
+  it('mantem o seletor fora da barra fixa e oferece o seletor dentro do menu', async () => {
+    const user = userEvent.setup()
+    render(<Navbar />)
+
+    const nav = screen.getByRole('navigation', { name: /navegação principal/i })
+    expect(within(nav).queryByRole('group', { name: 'Idioma' })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /abrir menu/i }))
+
+    expect(
+      within(document.getElementById('menu-mobile') as HTMLElement).getByRole('group', {
+        name: 'Idioma',
+      }),
+    ).toBeInTheDocument()
   })
 
   it('abre solta sobre o hero, que e a primeira folha', () => {

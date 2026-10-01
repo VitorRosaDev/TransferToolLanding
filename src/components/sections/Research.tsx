@@ -21,8 +21,12 @@ export function Research() {
     <Section id="research" number="06" eyebrow={t('research.eyebrow')} title={t('research.title')}>
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-7">
-          <p className="text-base leading-relaxed text-ink-600">{t('research.body1')}</p>
-          <p className="mt-5 text-base leading-relaxed text-ink-600">{t('research.body2')}</p>
+          <p className="text-justify text-base leading-relaxed text-ink-600">
+            {t('research.body1')}
+          </p>
+          <p className="mt-5 text-justify text-base leading-relaxed text-ink-600">
+            {t('research.body2')}
+          </p>
         </Reveal>
 
         <Reveal className="lg:col-span-5" delay={0.08}>
