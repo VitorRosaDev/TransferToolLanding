@@ -14,10 +14,10 @@ export interface DownloadArtifact {
 }
 
 const FALLBACK_DESKTOP_URL =
-  'https://github.com/VitorRosaDev/TransferToolReleases/releases/download/v1.1.0/TransferToolRPA-Setup-1.1.0.exe'
+  'https://github.com/VitorRosaDev/TransferToolReleases/releases/download/v1.2.0/TransferToolRPA-Setup-1.2.0.exe'
 
 const FALLBACK_MOBILE_URL =
-  'https://github.com/VitorRosaDev/TransferToolReleases/releases/download/v1.1.1/TransferTool-1.1.1.apk'
+  'https://github.com/VitorRosaDev/TransferToolReleases/releases/download/v1.2.0/TransferTool-1.2.0.apk'
 
 /** Pagina publica que lista todas as releases (usada no QR Code e como fallback). */
 export const RELEASES_PAGE_URL =
@@ -32,8 +32,8 @@ const releasesReady = import.meta.env.VITE_RELEASES_READY === 'true'
 
 export const desktopRelease: DownloadArtifact = {
   id: 'desktop',
-  fileName: 'TransferToolRPA-Setup-1.1.0.exe',
-  version: '1.1.0',
+  fileName: 'TransferToolRPA-Setup-1.2.0.exe',
+  version: '1.2.0',
   size: '164 MB',
   url: import.meta.env.VITE_DESKTOP_DOWNLOAD_URL?.trim() || FALLBACK_DESKTOP_URL,
   available: releasesReady,
@@ -41,8 +41,8 @@ export const desktopRelease: DownloadArtifact = {
 
 export const mobileRelease: DownloadArtifact = {
   id: 'mobile',
-  fileName: 'TransferTool-1.1.1.apk',
-  version: '1.1.1',
+  fileName: 'TransferTool-1.2.0.apk',
+  version: '1.2.0',
   size: '96 MB',
   url: import.meta.env.VITE_MOBILE_DOWNLOAD_URL?.trim() || FALLBACK_MOBILE_URL,
   available: releasesReady,

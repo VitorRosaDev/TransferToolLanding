@@ -47,7 +47,9 @@ describe('DownloadCard', () => {
 
     const link = screen.getByRole('link', { name: 'Baixar APK' })
     expect(link).toHaveAttribute('href', artifact.url)
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    // O asset do GitHub responde com `Content-Disposition: attachment`, entao o
+    // download acontece na propria aba — sem target="_blank" (nao abre o GitHub).
+    expect(link).not.toHaveAttribute('target')
 
     await user.click(link)
   })

@@ -5,7 +5,7 @@ import type { DownloadArtifact } from '../../config/downloads'
 import { trackEvent } from '../../lib/analytics'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
-import { IconCheck, IconExternalLink } from '../ui/icons'
+import { IconCheck, IconDownload } from '../ui/icons'
 
 /**
  * Copia estatica do card. Vem de fora (e nao de `t()` interno) para que o
@@ -111,10 +111,11 @@ export function DownloadCard({ artifact, copy, showQrCode = false, qrValue }: Do
 
       <div className="mt-auto pt-7">
         {artifact.available ? (
+          // Download na mesma aba: o asset do GitHub responde com
+          // `Content-Disposition: attachment`, entao o navegador baixa o
+          // arquivo sem navegar para fora do site (nem abrir o GitHub).
           <Button
             href={artifact.url}
-            target="_blank"
-            rel="noopener noreferrer"
             size="lg"
             className="w-full"
             onClick={() =>
@@ -125,7 +126,7 @@ export function DownloadCard({ artifact, copy, showQrCode = false, qrValue }: Do
             }
           >
             {copy.ctaLabel}
-            <IconExternalLink className="h-4 w-4" />
+            <IconDownload className="h-4 w-4" />
           </Button>
         ) : (
           <Button size="lg" disabled className="w-full">
