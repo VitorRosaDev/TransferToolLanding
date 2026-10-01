@@ -33,6 +33,9 @@
     "ctaPrimary": "Download the applications",
     "ctaSecondary": "See how it works",
     "offlineNote": "Works without internet · Data stays on the device",
+    "motion": {
+      "enable": "Enable motion"
+    },
     "flow": {
       "mobileLabel": "TransferTool Mobile",
       "desktopLabel": "TransferTool RPA"

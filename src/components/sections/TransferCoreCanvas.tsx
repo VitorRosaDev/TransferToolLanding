@@ -1,9 +1,11 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useReducedMotion } from 'framer-motion'
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MathUtils, type Group } from 'three'
 
 import { heroSectionRef } from '../../lib/heroAnchor'
+import { IconSmartphone } from '../ui/icons'
 
 type Vec3 = [number, number, number]
 
@@ -40,6 +42,12 @@ const REST_TILT: Vec3 = [0.45, -0.55, 0]
 
 /** O quanto o ponteiro inclina o cubo (0 = ignora o mouse, 1 = acompanha tudo). */
 const POINTER_TILT = 0.13
+
+/** O giroscopio tem um ganho maior, mas continua limitado para nao distrair. */
+const ORIENTATION_TILT = 0.2
+
+/** Inclinacao relativa necessaria para atingir o limite do giro. */
+const ORIENTATION_RANGE = 30
 
 /** Fator do `lerp` por quadro: quanto menor, mais lento e mais suave o giro. */
 const SMOOTHING = 0.05
@@ -103,6 +111,88 @@ interface PointerOffset {
   y: number
 }
 
+interface RotationInput extends PointerOffset {
+  active: boolean
+}
+
+interface OrientationPermissionAPI {
+  requestPermission?: () => Promise<'granted' | 'denied'>
+}
+
+function getOrientationPermissionAPI(): OrientationPermissionAPI | null {
+  if (typeof DeviceOrientationEvent === 'undefined') return null
+  return DeviceOrientationEvent as typeof DeviceOrientationEvent & OrientationPermissionAPI
+}
+
+function updateOrientation(
+  event: DeviceOrientationEvent,
+  orientation: RotationInput,
+  baseline: { current: { beta: number; gamma: number } | null },
+) {
+  if (event.beta === null || event.gamma === null) return
+
+  if (!baseline.current) {
+    baseline.current = { beta: event.beta, gamma: event.gamma }
+    orientation.x = 0
+    orientation.y = 0
+    orientation.active = true
+    return
+  }
+
+  orientation.x = MathUtils.clamp((event.gamma - baseline.current.gamma) / ORIENTATION_RANGE, -1, 1)
+  orientation.y = MathUtils.clamp((event.beta - baseline.current.beta) / ORIENTATION_RANGE, -1, 1)
+  orientation.active = true
+}
+
+function useDeviceOrientation(still: boolean) {
+  const orientation = useRef<RotationInput>({ x: 0, y: 0, active: false })
+  const baseline = useRef<{ beta: number; gamma: number } | null>(null)
+  const listener = useRef<((event: DeviceOrientationEvent) => void) | null>(null)
+  const permissionAPI = getOrientationPermissionAPI()
+  const [permissionPrompt, setPermissionPrompt] = useState(
+    () => !still && typeof permissionAPI?.requestPermission === 'function',
+  )
+
+  useEffect(() => {
+    if (still || !permissionAPI || typeof permissionAPI.requestPermission === 'function') return
+
+    baseline.current = null
+    const handleOrientation = (event: DeviceOrientationEvent) =>
+      updateOrientation(event, orientation.current, baseline)
+    listener.current = handleOrientation
+    window.addEventListener('deviceorientation', handleOrientation)
+
+    return () => {
+      if (listener.current) {
+        window.removeEventListener('deviceorientation', listener.current)
+        listener.current = null
+      }
+      orientation.current = { x: 0, y: 0, active: false }
+      baseline.current = null
+    }
+  }, [permissionAPI, still])
+
+  const requestPermission = async () => {
+    if (!permissionAPI?.requestPermission || listener.current) return
+    try {
+      const permission = await permissionAPI.requestPermission()
+      if (permission === 'granted') {
+        baseline.current = null
+        const handleOrientation = (event: DeviceOrientationEvent) =>
+          updateOrientation(event, orientation.current, baseline)
+        listener.current = handleOrientation
+        window.addEventListener('deviceorientation', handleOrientation)
+      }
+    } catch {
+      orientation.current.active = false
+    } finally {
+      setPermissionPrompt(false)
+    }
+  }
+
+  return { orientation, permissionPrompt, requestPermission }
+}
+
 /**
  * Posicao do ponteiro relativa ao hero inteiro, de -1 a 1 nos dois eixos.
  *
@@ -151,19 +241,28 @@ function usePointerInHero() {
  * sem saltar. Com `prefers-reduced-motion` o alvo volta a ser a pose de repouso
  * e o palco passa a desenhar sob demanda, sem laco de animacao.
  */
-function HollowCube({ still, pointer }: { still: boolean; pointer: RefObject<PointerOffset> }) {
+function HollowCube({
+  still,
+  pointer,
+  orientation,
+}: {
+  still: boolean
+  pointer: RefObject<PointerOffset>
+  orientation: RefObject<RotationInput>
+}) {
   const groupRef = useRef<Group>(null)
 
   useFrame(() => {
     const group = groupRef.current
     if (!group) return
 
-    const { x, y } = pointer.current
+    const input = orientation.current.active ? orientation.current : pointer.current
+    const tilt = orientation.current.active ? ORIENTATION_TILT : POINTER_TILT
 
     // O ponteiro vai de -1 a 1 nos dois eixos; a soma tem o sinal de Y invertido
     // para o cubo virar como se o visitante o empurrasse.
-    const targetX = REST_TILT[0] - (still ? 0 : y * POINTER_TILT)
-    const targetY = REST_TILT[1] + (still ? 0 : x * POINTER_TILT)
+    const targetX = REST_TILT[0] - (still ? 0 : input.y * tilt)
+    const targetY = REST_TILT[1] + (still ? 0 : input.x * tilt)
 
     group.rotation.x = MathUtils.lerp(group.rotation.x, targetX, SMOOTHING)
     group.rotation.y = MathUtils.lerp(group.rotation.y, targetY, SMOOTHING)
@@ -197,26 +296,41 @@ function HollowCube({ still, pointer }: { still: boolean; pointer: RefObject<Poi
  * verdade, ao custo de carregar a biblioteca 3D no bundle.
  */
 export function TransferCoreCanvas({ className = '' }: { className?: string }) {
+  const { t } = useTranslation()
   const shouldReduceMotion = useReducedMotion()
   const still = shouldReduceMotion ?? false
   const pointer = usePointerInHero()
+  const { orientation, permissionPrompt, requestPermission } = useDeviceOrientation(still)
 
   return (
-    <Canvas
-      aria-hidden="true"
-      className={className}
-      camera={{ position: [0, 0, 7], fov: 50 }}
-      dpr={[1, 2]}
-      frameloop={still ? 'demand' : 'always'}
-      gl={{ antialias: true, alpha: true }}
-    >
-      <ambientLight intensity={0.5} />
-      {/* Luz + contra-luz: sem elas o cubo vira uma silhueta chapada. */}
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <directionalLight position={[-5, -5, -2]} intensity={1} />
-      <pointLight position={[0, 0, 2]} intensity={0.5} />
+    <div className={className}>
+      <Canvas
+        aria-hidden="true"
+        className="h-full w-full"
+        camera={{ position: [0, 0, 7], fov: 50 }}
+        dpr={[1, 2]}
+        frameloop={still ? 'demand' : 'always'}
+        gl={{ antialias: true, alpha: true }}
+      >
+        <ambientLight intensity={0.5} />
+        {/* Luz + contra-luz: sem elas o cubo vira uma silhueta chapada. */}
+        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <directionalLight position={[-5, -5, -2]} intensity={1} />
+        <pointLight position={[0, 0, 2]} intensity={0.5} />
 
-      <HollowCube still={still} pointer={pointer} />
-    </Canvas>
+        <HollowCube still={still} pointer={pointer} orientation={orientation} />
+      </Canvas>
+
+      {permissionPrompt ? (
+        <button
+          type="button"
+          onClick={() => void requestPermission()}
+          className="absolute inset-x-0 bottom-2 z-10 mx-auto inline-flex min-h-11 w-fit items-center gap-2 rounded-full border border-white/20 bg-void-900/80 px-4 text-xs font-medium text-white shadow-sm backdrop-blur transition-colors hover:bg-void-800 lg:hidden"
+        >
+          <IconSmartphone aria-hidden="true" className="h-4 w-4" />
+          {t('hero.motion.enable')}
+        </button>
+      ) : null}
+    </div>
   )
 }

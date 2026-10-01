@@ -83,9 +83,9 @@ export function Hero() {
           */}
           <motion.div
             style={{ y: copyY, opacity: copyOpacity }}
-            className="order-2 flex flex-col lg:order-1 lg:block"
+            className="order-2 flex flex-col items-center text-center lg:order-1 lg:block lg:text-left"
           >
-            <p className="mono-label order-2 mt-4 text-white/55 lg:order-none lg:mt-0">
+            <p className="mono-label order-2 mt-4 text-center text-white/55 lg:order-0 lg:mt-0 lg:text-left">
               {t('hero.badge')}
             </p>
 
@@ -99,7 +99,7 @@ export function Hero() {
             */}
             <h1
               aria-label={`${titleLine1} ${titleLine2}`}
-              className="order-1 mt-0 grid max-w-[18ch] text-4xl leading-[1.06] font-bold text-balance text-white sm:text-5xl lg:order-none lg:mt-6 lg:text-[3.4rem]"
+              className="order-1 mt-0 grid max-w-[18ch] text-left text-4xl leading-[1.06] font-bold text-balance text-white sm:text-5xl lg:order-0 lg:mt-6 lg:text-[3.4rem]"
             >
               <span aria-hidden="true" className="invisible col-start-1 row-start-1">
                 {titleLine1}
@@ -117,11 +117,11 @@ export function Hero() {
               </span>
             </h1>
 
-            <p className="order-3 mt-7 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg">
+            <p className="order-3 mx-auto mt-7 max-w-xl text-justify text-base leading-relaxed text-white/70 sm:text-lg lg:mx-0 lg:text-left">
               {t('hero.subtitle')}
             </p>
 
-            <div className="order-4 mt-9 flex flex-wrap items-center gap-3">
+            <div className="order-4 mt-9 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
               <a
                 href="#downloads"
                 className={buttonClass('primary', 'lg')}
@@ -140,7 +140,7 @@ export function Hero() {
               </a>
             </div>
 
-            <p className="order-5 mono-label mt-8 flex items-center gap-2.5 text-white/55">
+            <p className="order-5 mono-label mt-8 flex items-center justify-center gap-2.5 text-center text-white/65 lg:justify-start lg:text-left">
               <span
                 aria-hidden="true"
                 className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400 animate-pulse-soft"
@@ -150,7 +150,7 @@ export function Hero() {
           </motion.div>
 
           <div className="relative order-1 mx-auto w-full max-w-md lg:order-2">
-            <div className="relative h-[300px] w-full sm:h-[360px] lg:h-[400px]">
+            <div className="relative h-60 w-full sm:h-90 lg:h-100">
               <TransferCoreCanvas className="absolute inset-0 h-full w-full" />
             </div>
 

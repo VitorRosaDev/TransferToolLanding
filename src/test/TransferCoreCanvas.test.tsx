@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import type { ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -103,7 +104,21 @@ beforeEach(() => {
 afterEach(() => {
   heroSectionRef.current = null
   document.body.innerHTML = ''
+  vi.unstubAllGlobals()
 })
+
+function installOrientationPermission(permission: 'granted' | 'denied' = 'granted') {
+  class MockDeviceOrientationEvent {}
+  const requestPermission = vi.fn().mockResolvedValue(permission)
+  Object.assign(MockDeviceOrientationEvent, { requestPermission })
+  vi.stubGlobal('DeviceOrientationEvent', MockDeviceOrientationEvent)
+
+  return requestPermission
+}
+
+function dispatchOrientation(beta: number, gamma: number) {
+  window.dispatchEvent(Object.assign(new Event('deviceorientation'), { beta, gamma }))
+}
 
 describe('TransferCoreCanvas', () => {
   it('gira o cubo com o ponteiro sobre a coluna de texto, fora do canvas', () => {
@@ -151,6 +166,34 @@ describe('TransferCoreCanvas', () => {
     expect(rotation.x).toBeCloseTo(REST.x + POINTER_TILT, 3)
   })
 
+  it('calibra e acompanha a inclinacao do dispositivo', () => {
+    vi.stubGlobal('DeviceOrientationEvent', class MockDeviceOrientationEvent {})
+    render(<TransferCoreCanvas />)
+
+    dispatchOrientation(90, 0)
+    dispatchOrientation(120, 30)
+    settle()
+
+    expect(rotation.x).toBeCloseTo(REST.x - 0.2, 3)
+    expect(rotation.y).toBeCloseTo(REST.y + 0.2, 3)
+  })
+
+  it('solicita permissao do sensor em navegadores que a exigem', async () => {
+    const user = userEvent.setup()
+    const requestPermission = installOrientationPermission()
+    render(<TransferCoreCanvas />)
+
+    await user.click(screen.getByRole('button', { name: /ativar movimento|enable motion/i }))
+
+    expect(requestPermission).toHaveBeenCalledOnce()
+    dispatchOrientation(90, 0)
+    dispatchOrientation(120, 30)
+    settle()
+
+    expect(rotation.x).toBeCloseTo(REST.x - 0.2, 3)
+    expect(rotation.y).toBeCloseTo(REST.y + 0.2, 3)
+  })
+
   it('volta a pose de repouso quando o ponteiro sai do hero', () => {
     const { hero, title } = mountHero()
     render(<TransferCoreCanvas />)
@@ -188,5 +231,15 @@ describe('TransferCoreCanvas', () => {
 
     expect(removeListener).toHaveBeenCalledWith('pointermove', expect.any(Function))
     expect(removeListener).toHaveBeenCalledWith('pointerleave', expect.any(Function))
+  })
+
+  it('remove o listener de orientacao ao desmontar', () => {
+    vi.stubGlobal('DeviceOrientationEvent', class MockDeviceOrientationEvent {})
+    const removeListener = vi.spyOn(window, 'removeEventListener')
+    const { unmount } = render(<TransferCoreCanvas />)
+
+    unmount()
+
+    expect(removeListener).toHaveBeenCalledWith('deviceorientation', expect.any(Function))
   })
 })
