@@ -6,7 +6,7 @@ import logoUrl from '../../assets/icon.svg'
 import { NAV_SECTIONS, type SectionChrome, type SectionTone } from '../../config/sections'
 import { useSectionTheme } from '../../lib/useSectionTheme'
 import { buttonClass } from '../ui/buttonClass'
-import { IconClose, IconMenu } from '../ui/icons'
+import { IconClose, IconDownload, IconMenu } from '../ui/icons'
 import { LanguageToggle } from './LanguageToggle'
 
 /** Pele do cabecalho: solta sobre a cena do hero, vidro do tom nas outras folhas. */
@@ -139,10 +139,12 @@ export function Navbar() {
 
           <a
             href="#downloads"
-            className={buttonClass('primary', 'md', 'hidden sm:inline-flex')}
+            className={buttonClass('primary', 'md', 'max-lg:w-11 max-lg:px-0')}
             onClick={() => setMenuOpen(false)}
+            title={t('nav.cta')}
           >
-            {t('nav.cta')}
+            <span className="sr-only lg:not-sr-only">{t('nav.cta')}</span>
+            <IconDownload className="h-4 w-4" />
           </a>
 
           <button

@@ -57,6 +57,15 @@ describe('Navbar', () => {
     expect(within(nav).queryByRole('link', { name: /contato/i })).not.toBeInTheDocument()
   })
 
+  it('usa icone generico no CTA mobile sem perder o nome acessivel', () => {
+    render(<Navbar />)
+
+    const downloadLink = screen.getByRole('link', { name: 'Baixar agora' })
+    expect(downloadLink).toHaveAttribute('href', '#downloads')
+    expect(downloadLink.querySelector('svg')).not.toBeNull()
+    expect(downloadLink.querySelector('.sr-only')).toHaveTextContent('Baixar agora')
+  })
+
   it('abre solta sobre o hero, que e a primeira folha', () => {
     render(<Navbar />)
 
