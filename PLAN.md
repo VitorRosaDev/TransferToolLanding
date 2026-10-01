@@ -1,136 +1,90 @@
-Eu tenho uma ideia, mas não sei todos os termos técnicos dela. 
-O site carrega.
-eu rolo para baixo.
-O texto dentro do hero recua (`copyY = -60px`) e desbota (`copyOpacity`) no scroll, com uma gradiente `from-transparent to-surface` dissolvendo o `void-950` no branco. 
-Quero que isso ainda aconteça, mas, quando eu rolar para baixo, a section hero inteira fica parada. a section seguinte deve se sobrepor de baixo para cima. como se eu pusesse uma folha em cima da outra sobre a mesa. Vamos desenvolver esta transição, pois eu gostaria que fosse o padrão de transição entre todas as sessões da página e que elas alternem entre o padrão claro e escuro.
-O `Navbar` deve trocar de pele conforme a linha da próxima section o atravessa.
+Não publicarei na hostinger, decidi publicar como um projeto pessoal referenciado no meu portfólio que está no github pages.
+Estou criando um card em "C:\MyGitHub\my-portfolio" que irá apontar para esta página.
+Me ajude a publicar com o caminho https://vitorrosadev.github.io/transfertool/
+Garanta que os links baixem as respectivas versões atuais disponíveis em https://github.com/VitorRosaDev/TransferToolReleases (com os critérios já estabelecidos: Clicar no botão e iniciar o download sem sair do site nem abrir o github)
+Monte um plano detalhado mencionando skills necessárias e passo a passo para a publicação da página.
+Não se preocupe com o card para o meu portfólio, já estou produzindo esta atualização em paralelo.
 
-Você descreveu exatamente o que tecnicamente se chama "sticky stacking" (seções que se empilham como folhas), generalizado como padrão e com alternância claro/escuro. Mapeei a estrutura atual inteira. Antes de abrir qualquer arquivo, aqui está o plano.
+---
 
-Traduzindo sua ideia para os termos técnicos
-O que você disse	Termo técnico
-"a section hero inteira fica parada"	position: sticky; top: 0 (a seção "gruda" no topo da janela enquanto o resto rola)
-"a section seguinte se sobrepõe de baixo para cima"	cover: a próxima seção, opaca e com z-index maior, desliza por cima
-"folha em cima da outra"	cada seção vira uma "folha" (sheet) com fundo sólido — já todas têm fundo opaco
-"alternem entre claro e escuro"	cada seção ganha um tone (light/dark) declarado numa fonte única
-"Navbar troca de pele conforme a linha da próxima section o atravessa"	a navbar passa a ler o tone da seção que está na "linha" do cabeçalho (a borda entre duas folhas), em vez do threshold fixo atual
-Estado atual (o que já temos e o que mudaria)
-Composição (App.tsx): Hero (escuro bg-void-950) + 6 seções via <Section>: overview(branco), howItWorks(muted), downloads(branco), privacy(muted), faq(branco), contact(muted) → Footer + CookieBanner.
-Section.tsx: só tem tone: 'default' | 'muted' (ambas claras). Todo texto/card usa text-ink-*/bg-surface/border-ink-200 — ou seja, não existe tom escuro além do hero.
-Navbar.tsx: troca de pele num threshold único sobre o hero (HERO_HANDOVER = 0.5). Não sabe de "linha entre seções".
-Hero.tsx: já tem o recuo/desbotamento (copyY/copyOpacity) que você quer manter, e o degradê from-transparent to-surface que perguntou antes.
-A feature anterior de pin/cover que eu reverti usava .hero-pin-spacer/.hero-cover-pull + fitsOneScreen — era específica do hero; agora a ideia é generalizar e limpar isso.
-Arquitetura proposta (como ficaria)
-Fonte única de ordem + tom — src/config/sections.ts:
+Tenho o contexto completo para montar o plano. Resumo do que **verifiquei** (tudo read-only):
 
+- **Repo**: `VitorRosaDev/TransferToolLanding` — já é **público** (`private: false`), branch `main`, remote `origin`.
+- **Base**: `vite.config.ts` já usa `base: './'` (relativo) → JS/CSS/fontes já saem relativos e funcionam em subpasta.
+- **`dist/index.html`**: o Vite **já reescreve** favicon/apple-touch-icon/og:image/twitter:image de `/img/LOGO.png` → `./img/LOGO.png`. Porém o **JSON-LD `"image": "/img/LOGO.png"` NÃO é reescrito** (fica absoluto na raiz → quebrado em `/transfertool/`), e `og:image`/`twitter:image` relativos não servem para compartilhamento social.
+- **Downloads**: `downloads.ts` já aponta para `v1.2.0` (fallback direto do asset). O botão só fica ativo com `VITE_RELEASES_READY=true`.
+- **Header do asset no GitHub** (confirmei com curl): `Content-Disposition: attachment` → um link **na mesma aba** baixa o arquivo **sem navegar para lugar nenhum** (e sem abrir o GitHub). Hoje o `DownloadCard` usa `target="_blank"` + ícone de link externo (abre nova aba).
+- **URL**: `https://vitorrosadev.github.io/transfertool/` é um _project site_ → o repo precisa se chamar **`transfertool`** (o nome do repo vira o caminho da URL).
 
-{ id: 'inicio',     tone: 'dark'  },
-{ id: 'overview',   tone: 'light' },
-{ id: 'howItWorks', tone: 'dark'  },
-{ id: 'downloads',  tone: 'light' },
-{ id: 'privacy',    tone: 'dark'  },
-{ id: 'faq',        tone: 'light' },
-{ id: 'contact',    tone: 'dark'  },
-App.tsx, o wrapper de empilhamento e a navbar leem da mesma lista (sem duplicar).
+---
 
-Wrapper reutilizável Stack (src/components/ui/Stack.tsx) que substitui a <Section> na hora de montar cada folha:
+# PLANO — Publicar em `https://vitorrosadev.github.io/transfertool/`
 
-aplica sticky top-0 + z-index crescente + fundo opaco por tom;
-gate de ajuste: só "prende" quando a folha cabe na tela (medição via ResizeObserver + matchMedia/innerHeight); folha mais alta rola normal (graceful) — reaproveita a ideia do fitsOneScreen, mas sem spacer/margem negativa (o sticky puro já faz o cover).
-Tom escuro no design system (Section.tsx, Card.tsx, tokens no index.css):
+## Decisões propostas (me corrija se discordar)
 
-Section ganha tone: 'default' | 'muted' | 'dark' (ou theme), com título text-white, subtítulo text-white/70, filete border-white/10, número text-brand-400;
-novos tokens: superfície escura (reusar --color-void-800/900), borda white/10, textos white/*;
-reestilo dos filhos: Card/CardLink/IconTile, DownloadCard, grade de Privacy, timeline de HowItWorks, acordeão de Faq, cards de Contact, botão secondary. É a maior parte do trabalho.
-Navbar por "linha" — src/lib/useSectionTheme.ts (ou dentro de sections.ts):
+1. **Renomear o repo** `TransferToolLanding` → **`transfertool`** (GitHub redireciona o nome antigo). Alternativa: criar um repo novo `transfertool` e fazer push.
+2. **Deploy via GitHub Actions** (build + Pages), recomendado por ser "push e pronto". Alternativa: push manual do `dist/` para a branch `gh-pages`.
+3. **Download na mesma aba** (remover `target="_blank"` do botão ativo), apoiado no `Content-Disposition: attachment` já confirmado — é o que cumpre à risca "sem sair do site nem abrir o GitHub".
+4. Corrigir `og:image`/`twitter:image`/JSON-LD/canonical para a **URL absoluta de produção**.
 
-um IntersectionObserver com rootMargin calibrado na altura do cabeçalho (~72px), observando a borda de cada seção; a seção cuja linha está no cabeçalho define o tom;
-navbar mapeia tom → pele: sobre dark = transparente + texto branco (como no hero hoje); sobre light = branco/85 + texto ink. Troca no instante em que a linha da próxima folha atravessa o cabeçalho, como você pediu.
-Hero mantém o fade interno; o "ficar parado + ser coberto" passa a vir do Stack (a lógica própria de pin do hero continua fora dele).
+## Skills mapeadas por etapa
 
-Fases (para ficar verificável a cada passo)
-F1 — Mecânica genérica: Stack + sections.ts + navbar por tom, primeiro só com hero→overview como prova (todos os tons ainda claros, só o hero escuro). Valida screenshot desktop/mobile.
-F2 — Alternância de tons: aplicar o mapa claro/escuro completo e o restyle dark de Section + cards/tiles/timeline/faq/contact.
-F3 — Acabamento: borda/arredondamento de "folha" (se quiser o efeito de papel: topo levemente arredondado + sombra para cima), prefers-reduced-motion desligando o pin, e testes (useSectionTheme, gate de ajuste, navbar) + lint/prettier/typecheck/build verdes.
-Riscos / pontos que quero alinhar antes
-Seções altas (HowItWorks/Downloads/Privacy/Faq/Contact são longas, sobretudo no mobile) — é a decisão que muda a mecânica (pergunta abaixo).
-Footer/CookieBanner: proponho deixar fora do empilhamento (footer não é "folha"; banner é fixo). Se quiser incluir, aviso.
-Sombra/arredondamento da folha: opcional, dá o "papel sobre a mesa" literal. Posso incluir em F3 ou deixar a emenda limpa (sem borda visível), como hoje.
-Esforço do restyle dark: é mecânico mas extenso (7 componentes + tokens). Não muda nenhum texto/conteúdo, só cores.
-A decisão mais importante é como tratar seções mais altas que a tela:
+| Etapa                         | Skills                                                                                                                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0 — Repo/Pages                | `github-automation`, `github-workflow-automation`                                                                                                                       |
+| A — Código (paths + download) | `frontend-seo`, `schema-markup`, `seo-technical`, `frontend-security-coder`, `frontend-api-integration-patterns`, `typescript-expert`                                   |
+| B — Workflow CI               | `github-actions-templates`, `github-actions-advanced`, `deployment-pipeline-design`, `deployment-procedures`, `cicd-automation-workflow-automate`, `secrets-management` |
+| C — Validação                 | `vitest-skill`, `unit-testing-test-generate`, `testing-patterns`, `code-review-and-quality`                                                                             |
 
-Quando uma seção for mais alta que a janela (HowItWorks, Downloads, FAQ…), o que deve acontecer?
+---
 
-Riscos
-1. Seções altas: Elas devem rolar normalmente. No final elas travam e a próxima passa a subir. Para algumas, estou planejando rolagem lateral (da direita para a esquerda. mas isso é futuro.
-2. Footer/CookieBanner: Pode tirar a sessão de Contato e o footer deve conter © 2026 Vitor Rosa - All rights reserved. seguido inline de ícones sóbrios do linkedin, github, email e portfólio, pode tirar "Feito com React, Vite e Tailwind CSS · Fontes self-hosted" e "voltar ao topo.
-3. Emenda limpa
-4. Por enquanto, apenas cores, mas com ambiente preparado para receber backgrounds dinâmicos como o hero.
-5. Quero que o cubo permaneça soberano sobre todas as sections, e que o texto fique alinhado à esquerda, como em hero.
-6. Para responsividade mobile web, o cubo é a primeira coisa a aparecer, (gostaria de interatividade com o giroscópio do telefone) e o h1, seguido de sua estrutura semântica rolam para cima até chegar no final e travar. E assim sucessivamente para as demais sections.
-Faremos refinamento de responsividade mobile no futuro.
-Invoque todas as skills necessárias para refinar o padrão de projeto e executar com profissionalismo. Se necessário quebre em tarefas menores para que a qualidade seja preservada
+## ETAPA 0 — Repositório e GitHub Pages (UI, manual)
 
-Perfeito — capturei tudo. Antes de qualquer linha de código, dois registros importantes: __(1)__ continuo em __modo de planejamento__ (não posso editar/executar até você ativar o modo Act), e __(2)__ sua resposta nº 5 mudou a arquitetura de forma decisiva, então preciso fechar isso com você antes de quebrar em tarefas.
+- **0.1** Renomear o repo para `transfertool` (Settings → General → Rename). Depois, localmente: `git remote set-url origin https://github.com/VitorRosaDev/transfertool.git`.
+- **0.2** Habilitar Pages: Settings → Pages → **Source = "GitHub Actions"** (para a Etapa B). (Se optar por manual, "Deploy from a branch" → `gh-pages`.)
+- **0.3** Garantir que `TransferToolReleases` permanece público (já é — os assets respondem 302/200).
 
-## O que ficou registrado das suas respostas
+## ETAPA A — Ajustes de código
 
-1. __Seções altas__ → rolam normalmente; __no final travam__ e a próxima sobe por cima (rolagem lateral para algumas é futuro).
-2. __Footer/CookieBanner__ → __remover a seção Contato__; footer vira `© 2026 Vitor Rosa - All rights reserved.` + 4 ícones sóbrios inline (LinkedIn, GitHub, e-mail, portfólio). Sair __"Feito com React/Vite/Tailwind"__ e __"voltar ao topo"__.
-3. __Emenda limpa__ → sem borda/arredondamento de "folha".
-4. __Tons__ → por ora só __cores__, mas o sistema de seção deve ter um __slot de fundo__ pronto para backgrounds dinâmicos (tipo o hero).
-5. __Cubo soberano__ sobre todas as seções + __texto alinhado à esquerda__ (como no hero).
-6. __Mobile__ → cubo primeiro, depois `h1`, e a estrutura semântica rola/trava; giroscópio e refinamento mobile = futuro.
+- **A1 — `index.html`**: definir a URL absoluta de produção.
+  - `og:image` e `twitter:image` → `https://vitorrosadev.github.io/transfertool/img/LOGO.png`.
+  - JSON-LD `"image"` → `https://vitorrosadev.github.io/transfertool/img/LOGO.png` (hoje fica `/img/LOGO.png` e quebra).
+  - Adicionar `<link rel="canonical" href="https://vitorrosadev.github.io/transfertool/" />`.
+  - Remover o `TODO` de domínio (agora definido).
+- **A2 — `DownloadCard.tsx`**: no **botão ativo** de download, remover `target="_blank"` e `rel="noopener noreferrer"` e trocar `IconExternalLink` por `IconDownload` → download **na mesma aba** (GitHub responde `Content-Disposition: attachment`, então o navegador baixa sem navegar). Manter o `onClick` de `trackEvent`. **Manter** `target="_blank"` no link secundário "Ver todas as releases" (intencional).
+- **A3 — `DownloadCard.test.tsx`**: atualizar o teste "libera o link direto quando o artefato está publicado" (remover o assert de `rel="noopener noreferrer"`; assertar que **não** há `target`).
 
-## O ponto que muda a arquitetura (preciso fechar)
+## ETAPA B — Workflow de deploy (GitHub Actions)
 
-Hoje as seções são __folhas opacas__ (branca/muted/preta). Se o __cubo fica soberano__ — ou seja, sempre visível, acima de tudo — isso conflita com "folha opaca sobe e cobre a anterior", porque uma folha opaca __cobriria o cubo também__. São três leituras possíveis:
+- **B1** Criar `.github/workflows/deploy.yml`:
+  1. `actions/checkout`
+  2. `actions/setup-node` (node 22, exigido pelo toolchain atual)
+  3. `npm ci`
+  4. (opcional, gate) `npm run lint` + `npm run typecheck` + `npm test`
+  5. `npm run build` com `env: VITE_RELEASES_READY: "true"` (boolean, não é segredo → pode ficar direto no workflow)
+  6. `actions/configure-pages` → `actions/upload-pages-artifact` (path `./dist`) → `actions/deploy-pages`
+  - Permissões: `id-token: write`, `contents: read`, `pages: write`.
+- **B2** (opcional) `VITE_GA_ID` como **secret** do repo para analytics pós-consentimento.
+- **B3** Atualizar `README.md`: substituir "Deploy no Hostinger" por "Deploy no GitHub Pages" (steps + URL final).
 
-- __(A)__ Cubo vira uma __cena fixa global__ (sempre à frente/visível); as seções deixam de ser folhas opacas e viram __painéis de texto à esquerda__ que deslizam/travam sobre essa cena. É o design mais forte, mas é outro produto (não é mais "empilhar folhas").
-- __(B)__ Cubo fica __só no hero__ (como hoje); as demais seções empilham como folhas opacas (o plano anterior).
-- __(C)__ __Híbrido__: cubo fixo numa coluna reservada (desktop à direita / mobile no topo), e as __folhas opacas empilham apenas na coluna do texto__.
+## ETAPA C — Validação
 
-## Quebra em tarefas (ordem proposta — a F4 depende da resposta acima)
+1. Build local com `VITE_RELEASES_READY=true` e conferir `dist/index.html` (paths relativos/absolutos corretos).
+2. Servir `dist/` sob o prefixo `/transfertool/` localmente e validar: página carrega, assets/fontes/favicon OK, seção Pesquisa presente, e o botão de download **baixa o asset direto sem navegar**.
+3. `git push` e validar na URL live `https://vitorrosadev.github.io/transfertool/` (desktop + mobile).
+4. Gate de qualidade: `npm run format` → `lint` → `typecheck` → `test` → `build`.
 
-- __T1 — Fundação/design tokens__: `src/config/sections.ts` (ordem + tom + slot de fundo), tom `dark` no `Section.tsx`, tokens escuros em `index.css`.
-- __T2 — Transição de empilhamento genérica__: componente `Stack` (sticky + `z-index` + gate de "cabe na tela" + __travamento no fim__ para seções altas).
-- __T3 — Navbar por "linha"__: hook `useSectionTheme` (IntersectionObserver na borda de cada seção, calibrado na altura do cabeçalho) + mapa de peles claro/escuro.
-- __T4 — Cubo e layout__ (resposta da pergunta abaixo): hero + persistência do cubo + alinhamento à esquerda + ordem mobile (cubo → h1 → resto).
-- __T5 — Restyle escuro__: `Section`, `Card`/`IconTile`/`CardLink`, `DownloadCard`, grade de `Privacy`, timeline de `HowItWorks`, acordeão de `Faq`, botão `secondary`.
-- __T6 — Footer/Nav simplificados__: remover `Contact` + `SECTION_IDS`/`NAV_LABEL_KEY`, novo footer (© + ícones), i18n (chaves novas/removidas).
-- __T7 — Qualidade__: testes (`useSectionTheme`, gate/travamento, navbar), `prettier`/`lint`/`typecheck`/`build` verdes e validação em browser (desktop + mobile), como na reversão.
+---
 
-Antes de eu abrir qualquer arquivo, preciso da sua decisão sobre o cubo:
+## Observações fixas
 
-Como o cubo 3D deve se comportar em relação às seções? (é o que define toda a arquitetura)
+- Nada de `.env.local` commitado; `VITE_RELEASES_READY=true` entra só no build de CI.
+- Não é preciso `404.html` (a página é single-page com navegação por âncora, sem router).
+- A pasta raiz `img/LOGO.png` (duplicata) não é usada pelo build (só `public/` é copiado) — limpeza opcional.
 
-Plan
+Confirme (ou ajuste) as **4 decisões** acima e **troque para Act mode** para eu executar. Em especial: você prefere **renomear** `TransferToolLanding` → `transfertool`, ou **criar um repo novo** `transfertool`?
 
-Fechado: (B) — cubo só no hero; as demais seções empilham como folhas opacas, texto alinhado à esquerda. Com isso a arquitetura está definida. Segue o plano final (modo de planejamento — nada editado ainda).
+---
 
-Plano final
-Mapa de seções e tons (fonte única src/config/sections.ts): inicio(dark) → overview(light) → howItWorks(dark) → downloads(light) → privacy(dark) → faq(light). contact é removido (vira o footer).
-
-Mecânica: cada folha = sticky top-0 + z-index crescente + fundo opaco por tom. Seção curta (cabe na tela) → prende e a próxima sobe por cima. Seção alta → rola normal e trava no fim para a próxima subir (vou prototipar esse "travar no fim" e validar visualmente). prefers-reduced-motion desliga o pin. Sem borda/arredondamento (emenda limpa).
-
-Navbar: useSectionTheme (IntersectionObserver na borda de cada seção, calibrado na altura do cabeçalho) — troca de pele no instante em que a linha da próxima folha cruza o cabeçalho: sobre dark = transparente + texto branco; sobre light = branco/85 + texto ink.
-
-Tons: só cores por ora, mas Section ganha um slot de fundo (background?: ReactNode) para receber depois cenas dinâmicas (tipo o ShapeGrid/cubo do hero).
-
-Hero: mantém copyY/copyOpacity e o degradê from-transparent to-surface; o pin/cover passa a vir do Stack genérico (nada de lógica de pin dentro dele). Mobile: cubo primeiro, depois h1 (reordenação da coluna empilhada).
-
-Tarefas (ordem de execução)
-#	Tarefa	Critério de aceite
-T1	sections.ts + tom dark no Section + slot de fundo + tokens escuros em index.css	Section renderiza dark com título text-white, filete border-white/10, número text-brand-400
-T2	Componente Stack (sticky + z + gate "cabe na tela" + travamento no fim)	hero→overview cobrindo sem artefato; seção alta rolando e travando no fim
-T3	useSectionTheme + Navbar por linha de seção	navbar troca de pele exatamente quando a borda cruza o cabeçalho
-T4	Hero: cubo no hero, mobile cubo-primeiro, manter fade/degradê	desktop: texto à esquerda + cubo à direita; mobile: cubo → h1 → resto
-T5	Restyle escuro (Section, Card/IconTile/CardLink, DownloadCard, Privacy, HowItWorks, Faq, secondary)	todas as folhas dark legíveis, contraste ok
-T6	Remover Contact (+ SECTION_IDS/NAV_LABEL_KEY/chaves i18n) e novo footer (© 2026 Vitor Rosa - All rights reserved. + 4 ícones inline)	nav/footer sem "contato"; sem "Feito com…" e sem "voltar ao topo"
-T7	Testes (useSectionTheme, Stack gate/trava, navbar) + prettier/lint/typecheck/build + validação em browser (desktop/mobile)	suíte verde e screenshots conferidos
-Decisões que vou assumir (me corrija se discordar)
-Footer exato: © 2026 Vitor Rosa - All rights reserved. seguido inline de LinkedIn, GitHub, e-mail, portfólio (ícones IconLinkedin/IconGithub/IconMail/IconGlobe, já existentes), com aria-label via i18n. O footer.rights passa a carregar essa frase (nome fixo, ano dinâmico ou fixo 2026 — direi na hora).
-Contato sai por completo (arquivo, link de nav, chaves contact.*, CONTACT_LINKS); a info de contato fica só nos ícones do footer.
-Giroscópio e rolagem lateral de seções ficam no backlog (você marcou como futuro); o "travar no fim" mobile também será refinado depois — nesta etapa entrego a ordem cubo-primeiro e a mecânica desktop/short-section.
-Paridade de i18n (pt-BR/en, 177 chaves → novo total) mantida.
-Estou pronto para executar. Ative o modo Act (toggle Plan/Act) que eu começo pela T1 e vou validando cada tarefa com o gate de qualidade e screenshots — invocando, quando chegar na execução, as skills de design system, motion/scroll e testes.
+Pode fazer a limpeza opcional de img/LOGO.png mencionada no final do plano
+Pode renomear o repo para transfertool

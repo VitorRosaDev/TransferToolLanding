@@ -25,7 +25,7 @@ Bilíngue (pt-BR / EN), estática, sem backend. Publicada como arquivos estátic
 
 ## Requisitos
 
-- Node.js 20+ (validado em Node 26)
+- Node.js 22.22+ (validado em Node 26) — mínimo exigido pelo toolchain (Vite 8 / TypeScript 6 / jsdom)
 - npm 10+
 
 ## Scripts
@@ -53,13 +53,13 @@ Copie `.env.example` para `.env.local` (não versionado) e preencha. Todas são 
 | `VITE_GA_ID`                | vazio → **nenhum script de terceiros** | Measurement ID do GA4 (`G-XXXXXXXXXX`). Sem ele, a camada de analytics fica inerte. |
 | `VITE_RELEASES_READY`       | `false` → cards "em preparação"        | Mude para `true` quando os instaladores estiverem publicados.                       |
 | `VITE_RELEASES_PAGE_URL`    | repositório público de releases        | Página usada no QR Code do APK e como fallback.                                     |
-| `VITE_DESKTOP_DOWNLOAD_URL` | asset `v1.1.0` no repo de releases     | URL direta do `TransferToolRPA-Setup-1.1.0.exe`.                                    |
-| `VITE_MOBILE_DOWNLOAD_URL`  | asset `v1.1.1` no repo de releases     | URL direta do `TransferTool-1.1.1.apk`.                                             |
+| `VITE_DESKTOP_DOWNLOAD_URL` | asset `v1.2.0` no repo de releases     | URL direta do `TransferToolRPA-Setup-1.2.0.exe`.                                    |
+| `VITE_MOBILE_DOWNLOAD_URL`  | asset `v1.2.0` no repo de releases     | URL direta do `TransferTool-1.2.0.apk`.                                             |
 
 ### Ativar os downloads (passo a passo)
 
 1. Publique os binários no repositório **público** de releases (ver `ECOSYSTEM_CONTEXT.md`).
-2. No `.env.local` (ou no build do Hostinger), ajuste as URLs e defina:
+2. No `.env.local` (localmente) ou no workflow de deploy (CI), ajuste as URLs e defina:
    ```
    VITE_RELEASES_READY=true
    ```
@@ -83,7 +83,8 @@ src/
 │   │   ├── Overview.tsx + OverviewProducts.tsx
 │   │   ├── HowItWorks.tsx           # timeline de 5 passos desenhada pelo scroll
 │   │   ├── Downloads.tsx + DownloadCard.tsx
-│   │   └── Privacy.tsx · Faq.tsx
+│   │   ├── Privacy.tsx · Faq.tsx
+│   │   └── Research.tsx            # folha final: origem científica do ecossistema
 │   └── ui/                          # Stack (folha), Section, Card, Button, Reveal, ShapeGrid, icons
 ├── config/
 │   ├── sections.ts                  # fonte única: ordem, tom, pele e rótulos das folhas
@@ -92,60 +93,56 @@ src/
 ├── i18n/
 │   ├── index.ts                     # detecção de idioma + metadados do documento
 │   ├── i18next.d.ts                 # tipagem estrita das chaves
-│   └── locales/{pt-BR,en}.json      # 146 chaves, paridade 1:1
+│   └── locales/{pt-BR,en}.json      # 153 chaves, paridade 1:1
 ├── lib/
 │   ├── analytics.ts                 # GA4 + Consent Mode v2 (única porta de saída)
 │   ├── useSectionTheme.ts           # tom da folha que atravessa o cabeçalho
 │   └── sheetTone.ts                 # contexto de tom + superfícies das folhas
 ├── styles/index.css                 # tokens @theme, tons das folhas, base
-└── test/                            # setup + 12 arquivos de teste (70 casos)
+└── test/                            # setup + 13 arquivos de teste (72 casos)
 public/img/LOGO.png                  # favicon / imagem de compartilhamento
 index.html                           # meta tags, OG, JSON-LD, <html lang>
 ```
 
 ---
 
-## Capturas de tela da seção "Como funciona"
+## Deploy no GitHub Pages
 
-A timeline de 5 passos exibe um quadro reservado com a cor da plataforma enquanto não houver imagens. Para publicar as capturas reais:
+A página é publicada em **https://vitorrosadev.github.io/transfertool/** por meio do GitHub
+Actions (`.github/workflows/deploy.yml`). Não há passo manual: todo push em `main` builda e publica.
 
-1. Salve os arquivos em `src/assets/steps/` (ex.: `montar.png`, `fechar.png`, `exportar.png`, `importar.png`, `automatizar.png`).
-2. Edite `src/components/sections/howItWorksSteps.ts` e preencha o mapa `STEP_SCREENSHOT`:
-   ```ts
-   import montar from '../../assets/steps/montar.png'
-   // ...
-   export const STEP_SCREENSHOT: Partial<Record<StepKey, string>> = {
-     montar,
-     fechar,
-     // ...
-   }
-   ```
-3. Rode `npm run build`. O quadro reservado é substituído pela imagem automaticamente, com `alt` derivado do título do passo.
+### Como funciona
 
-Recomendação: proporção **16:9** (o quadro é `aspect-video`) e largura entre 1280 e 1920 px.
+1. `actions/checkout` + `actions/setup-node` (Node 22) + `npm ci`.
+2. Gate de qualidade: `npm run lint` → `npm run typecheck` → `npm test`.
+3. `npm run build` com `VITE_RELEASES_READY=true` (libera os botões de download).
+4. `actions/configure-pages` → `actions/upload-pages-artifact` (`./dist`) → `actions/deploy-pages`.
 
----
+### Pré-requisitos (uma única vez)
 
-## Deploy no Hostinger (hPanel)
+- O repositório precisa se chamar **`transfertool`** — o nome do repo é o caminho da URL
+  (`vitorrosadev.github.io/transfertool/`).
+- Em **Settings → Pages → Source**, selecione **GitHub Actions**.
 
-1. Rode `npm run build` com as variáveis de produção definidas.
-2. Acesse **hPanel → Websites → Gerenciador de arquivos** (ou use FTP) e envie **todo o conteúdo** de `dist/` para `public_html/` (ou a subpasta desejada).
-3. Confirme que `index.html`, `assets/` e `img/` chegaram na raiz do destino.
+### Analytics (opcional)
 
-Notas importantes:
+`VITE_GA_ID` é lido de `secrets.VITE_GA_ID`. Sem o secret, a camada de analytics permanece inerte
+(nenhum script de terceiros). Para ativar:
 
-- O build usa `base: './'` (caminhos relativos), então **funciona tanto na raiz do domínio quanto em subpasta**, sem reconfiguração.
-- A página é single-page com navegação por âncora: **não é necessário** `.htaccess` com regra de rewrite.
-- Nenhum binário grande é enviado ao Hostinger — os instaladores ficam no repositório de releases do GitHub.
-- Após o primeiro deploy, ative HTTPS (SSL gratuito do hPanel) e revisite os TODOs de SEO abaixo.
+```bash
+gh secret set VITE_GA_ID --body "G-XXXXXXXXXX"
+```
 
-### TODOs de SEO pós-domínio
+Notas:
 
-Em `index.html`, substituir pelos valores absolutos do domínio final:
-
-- `og:image` e `twitter:image` (hoje relativos, funcionam no preview mas não em compartilhamento social).
-- O campo `"image"` do JSON-LD.
-- Opcional: adicionar `<link rel="canonical">`.
+- O build usa `base: './'` (caminhos relativos), mantendo JS, CSS, fontes e imagens funcionando
+  sob o subcaminho `/transfertool/`.
+- A página é single-page com navegação por âncora: **não é necessário** `404.html` nem rewrite.
+- Nenhum binário grande vai para o repositório — os instaladores ficam no repositório público de
+  releases do GitHub e são baixados diretamente. O asset responde `Content-Disposition:
+attachment`, então o download acontece **na mesma aba**, sem sair do site nem abrir o GitHub.
+- `og:url`, `og:image`, `twitter:image` e o campo `image` do JSON-LD já usam a URL absoluta de
+  produção, e `index.html` inclui `<link rel="canonical">`.
 
 ---
 
@@ -159,10 +156,19 @@ Em `index.html`, substituir pelos valores absolutos do domínio final:
 
 ---
 
+## Segurança
+
+- Os únicos recursos externos são o Google Analytics (após consentimento explícito) e os assets de release no GitHub (download direto via HTTPS).
+- Links externos abertos em nova aba usam `rel="noopener noreferrer"`; os links de download permanecem na aba atual.
+- Nenhum segredo é hardcoded no `src/`; as variáveis de ambiente ficam em `.env.local` (não versionado, coberto pelo `.gitignore`).
+- Os headers de segurança são gerenciados pela plataforma de hospedagem; não há configuração de servidor neste projeto estático.
+
+---
+
 ## Testes
 
 ```bash
 npm test
 ```
 
-26 casos cobrindo: `analytics` (consentimento, injeção do script, filtragem de eventos), `LanguageToggle` (troca, persistência, `<html lang>`), `CookieBanner` (estados, recusa, reabertura), `DownloadCard` (estado "em preparação", link liberado, QR Code) e `Faq` (acordeão acessível).
+72 casos cobrindo: `analytics` (consentimento, injeção do script, filtragem de eventos), `LanguageToggle` (troca, persistência, `<html lang>`), `CookieBanner` (estados, recusa, reabertura), `DownloadCard` (estado "em preparação", link liberado, QR Code), `Faq` (acordeão acessível), `Navbar`, `Footer`, `sections` (ordem, alternância de tons, paridade i18n) e `Research` (origem científica, artigo "em elaboração").
